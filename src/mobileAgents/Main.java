@@ -1,6 +1,8 @@
 
 package mobileAgents;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,7 +11,10 @@ public class Main {
 
 
     public static void main(String[] args) throws InterruptedException {
-        ExecutorService executorService = null;
+
+        Graph graph = new Graph("sample.txt");
+
+        /*ExecutorService executorService = null;
 
         Philosopher [] philosophers = null;
 
@@ -46,7 +51,7 @@ public class Main {
                 System.out.println(p + " eats " + p.getEatingCounter() + " times");
             }
 
-        }
+        }*/
     }
 }
 
