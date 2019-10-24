@@ -1,10 +1,7 @@
 package mobileAgents;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Graph {
@@ -14,8 +11,14 @@ public class Graph {
     private ArrayList<Point> vertices = new ArrayList<>();
     private ArrayList<Point> startingEdge = new ArrayList<>();
     private ArrayList<Point> endingEdge = new ArrayList<>();
+    private String file;
 
     public Graph(String file){
+        this.file = file;
+
+    }
+
+    public void readFile(){
         InputStream path = this.getClass().getResourceAsStream(file);
         BufferedReader reader;
         try {
@@ -30,7 +33,7 @@ public class Graph {
         catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Number of vertices: "+nodes);
+        /*System.out.println("Number of vertices: "+nodes);
         System.out.print("These are the vertices: ");
         System.out.println(vertices);
         //System.out.println(startingEdge);
@@ -38,10 +41,38 @@ public class Graph {
 
         makeNodes();
         formEdges();
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < nodes; i++){
             System.out.println("Neighbors of Node " +i+ ":" +adj[i]);
         }
-        breadthFirstSearch(0);
+        breadthFirstSearch(0);*/
+    }
+
+
+    public void lineEvaluation(String line) {
+        if(line.length() >= 8) {
+            if (line.substring(0, 4).equals("node")) {
+                //System.out.println("Found node");
+                int verX = line.charAt(5) - '0';
+                int verY = line.charAt(7) - '0';
+                vertices.add(new Point(verX, verY));
+                nodes++;
+            } else if (line.substring(0, 4).equals("edge")) {
+                int startX = line.charAt(5) - '0';
+                int startY = line.charAt(7) - '0';
+                startingEdge.add(new Point(startX, startY));
+                int endX = line.charAt(9) - '0';
+                int endY = line.charAt(11) - '0';
+                endingEdge.add(new Point(endX, endY));
+                //System.out.println("Found edge");
+            } else if (line.substring(0, 4).equals("fire")) {
+                //System.out.println("Found fire");
+            } else if (line.substring(0, 7).equals("station")) {
+                //System.out.println("Found station");
+            }
+        }
+        else{
+            //System.out.println("Nothing here");
+        }
     }
 
     public void breadthFirstSearch(int s) {
@@ -108,30 +139,4 @@ public class Graph {
         }
     }
 
-    public void lineEvaluation(String line) {
-        if(line.length() >= 8) {
-            if (line.substring(0, 4).equals("node")) {
-                //System.out.println("Found node");
-                int verX = line.charAt(5) - '0';
-                int verY = line.charAt(7) - '0';
-                vertices.add(new Point(verX, verY));
-                nodes++;
-            } else if (line.substring(0, 4).equals("edge")) {
-                int startX = line.charAt(5) - '0';
-                int startY = line.charAt(7) - '0';
-                startingEdge.add(new Point(startX, startY));
-                int endX = line.charAt(9) - '0';
-                int endY = line.charAt(11) - '0';
-                endingEdge.add(new Point(endX, endY));
-                //System.out.println("Found edge");
-            } else if (line.substring(0, 4).equals("fire")) {
-                //System.out.println("Found fire");
-            } else if (line.substring(0, 7).equals("station")) {
-                //System.out.println("Found station");
-            }
-        }
-        else{
-            //System.out.println("Nothing here");
-        }
-    }
 }
