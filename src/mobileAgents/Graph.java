@@ -6,20 +6,21 @@ import java.util.*;
 
 public class Graph {
 
-    private int nodes;   // No. of vertices
+    private int nodeCounter;   // No. of vertices
     private LinkedList[] adj; //Adjacency Lists
     private ArrayList<Point> vertices = new ArrayList<>();
     private ArrayList<Point> startingEdge = new ArrayList<>();
     private ArrayList<Point> endingEdge = new ArrayList<>();
     private String file;
+    private ArrayList<Sensor> sensors = new ArrayList<>();
+    private Map<Point, Integer> mappingCoorToInt = new HashMap<>();
 
     public Graph(String file){
         this.file = file;
-
     }
 
     public void readFile(){
-        InputStream path = this.getClass().getResourceAsStream(file);
+        InputStream path = this.getClass().getResourceAsStream(this.file);
         BufferedReader reader;
         try {
             reader = new BufferedReader(new InputStreamReader(path));
@@ -33,52 +34,61 @@ public class Graph {
         catch (IOException e) {
             e.printStackTrace();
         }
-        /*System.out.println("Number of vertices: "+nodes);
-        System.out.print("These are the vertices: ");
-        System.out.println(vertices);
-        //System.out.println(startingEdge);
-        //System.out.println(endingEdge);
+        System.out.println("Number of vertices: "+nodeCounter);
+        printForTesting();
+        //breadthFirstSearch(0);
+    }
 
-        makeNodes();
-        formEdges();
-        for (int i = 0; i < nodes; i++){
-            System.out.println("Neighbors of Node " +i+ ":" +adj[i]);
+    private void printForTesting() {
+        ArrayList<Sensor> neighbors = new ArrayList<>();
+        for(int i = 0; i < nodeCounter; i++){
+            System.out.println("X: " +sensors.get(i).getXCor());
+            System.out.println("Y: " +sensors.get(i).getYCor());
+            System.out.println("ID: " +sensors.get(i).getId());
+            neighbors = sensors.get(i).getNeighbors();
+            for(int j = 0; j < neighbors.size(); j++){
+                System.out.println("NeighborID: " +sensors.get(j).getId());
+            }
+            System.out.println();
         }
-        breadthFirstSearch(0);*/
     }
 
 
     public void lineEvaluation(String line) {
         if(line.length() >= 8) {
             if (line.substring(0, 4).equals("node")) {
-                //System.out.println("Found node");
                 int verX = line.charAt(5) - '0';
                 int verY = line.charAt(7) - '0';
+                Sensor sensor = new Sensor(verX, verY, nodeCounter);
+                sensors.add(sensor);
+                mappingCoorToInt.put(new Point(verX, verY), nodeCounter);
                 vertices.add(new Point(verX, verY));
-                nodes++;
+                nodeCounter++;
             } else if (line.substring(0, 4).equals("edge")) {
                 int startX = line.charAt(5) - '0';
                 int startY = line.charAt(7) - '0';
-                startingEdge.add(new Point(startX, startY));
+                Sensor sensorOne = sensors.get(getIDofPoint(new Point(startX, startY)));
+
                 int endX = line.charAt(9) - '0';
                 int endY = line.charAt(11) - '0';
-                endingEdge.add(new Point(endX, endY));
-                //System.out.println("Found edge");
+                Sensor sensorTwo = sensors.get(getIDofPoint(new Point(endX, endY)));
+
+                sensorOne.setNeighbors(sensorTwo);
+                sensorTwo.setNeighbors(sensorOne);
             } else if (line.substring(0, 4).equals("fire")) {
-                //System.out.println("Found fire");
             } else if (line.substring(0, 7).equals("station")) {
-                //System.out.println("Found station");
             }
         }
         else{
             //System.out.println("Nothing here");
         }
+
     }
 
     public void breadthFirstSearch(int s) {
         System.out.println();
         System.out.println("BFS starts here!");
-        boolean visited[] = new boolean[nodes];
+        boolean visited[] = new boolean[nodeCounter];
 
         LinkedList<Integer> queue = new LinkedList<>();
         visited[s]=true;
@@ -105,38 +115,9 @@ public class Graph {
     }
 
 
-    public void formEdges() {
-        int i = 0;
-        while(i < adj.length){
-            Point point = vertices.get(i);
-            int n = 0;
-            while(n < startingEdge.size()){
-                if(point.equals(startingEdge.get(n))){
-                    Point anotherP = endingEdge.get(n);
-                    int value = vertices.indexOf(anotherP);
-                    adj[i].add(value);
-                }
-                n++;
-            }
-            n = 0;
-            while(n < endingEdge.size()){
-                if(point.equals(endingEdge.get(n))){
-                    Point anotherP = startingEdge.get(n);
-                    int value = vertices.indexOf(anotherP);
-                    adj[i].add(value);
-                }
-                n++;
-            }
-            i++;
-        }
+    public int getIDofPoint(Point p){
+        return mappingCoorToInt.get(p);
     }
 
-    public void makeNodes() {
-        adj = new LinkedList[nodes];
-        //System.out.println(adj.length);
-        for (int i=0; i<nodes; ++i) {
-            adj[i] = new LinkedList();
-        }
-    }
 
 }

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class Sensor {
 
-    private int xcor;
+    private int xCor;
 
-    private int ycor;
+    private int yCor;
 
     private int id;
 
@@ -16,14 +16,30 @@ public class Sensor {
     public Sensor(int xcor, int ycor, int id) {
         this.id = id;
 
-        this.xcor = xcor;
+        this.xCor = xcor;
 
-        this.ycor = ycor;
+        this.yCor = ycor;
 
         neighbors = new ArrayList<Sensor>();
     }
 
     public void setNeighbors(Sensor sensor) {
         neighbors.add(sensor);
+    }
+
+    public int getXCor(){
+        return xCor;
+    }
+
+    public int getYCor(){
+        return yCor;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public ArrayList<Sensor> getNeighbors(){
+        return neighbors;
     }
 }
