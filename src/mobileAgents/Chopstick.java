@@ -19,7 +19,7 @@ public class Chopstick {
     public boolean pickUp(Philosopher philosopher, State state) throws  InterruptedException{
 
         if(lock.tryLock(10, TimeUnit.MILLISECONDS)) {
-            System.out.println(philosopher + "picked up " + state.toString() + " " + this);
+            System.out.println(philosopher + " picked up " + state.toString() + " " + this);
             return true;
         }
 

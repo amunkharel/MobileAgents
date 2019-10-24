@@ -30,20 +30,23 @@ public class Graph {
         catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(nodes);
+        System.out.println("Number of vertices: "+nodes);
+        System.out.print("These are the vertices: ");
         System.out.println(vertices);
-        System.out.println(startingEdge);
-        System.out.println(endingEdge);
+        //System.out.println(startingEdge);
+        //System.out.println(endingEdge);
 
         makeNodes();
         formEdges();
         for (int i = 0; i < 10; i++){
-            System.out.println(adj[i]);
+            System.out.println("Neighbors of Node " +i+ ":" +adj[i]);
         }
         breadthFirstSearch(0);
     }
 
     public void breadthFirstSearch(int s) {
+        System.out.println();
+        System.out.println("BFS starts here!");
         boolean visited[] = new boolean[nodes];
 
         LinkedList<Integer> queue = new LinkedList<>();
@@ -52,13 +55,8 @@ public class Graph {
 
         while (queue.size() != 0)
         {
-            // Dequeue a vertex from queue and print it
             s = queue.poll();
             System.out.print(s+":");
-
-            // Get all adjacent vertices of the dequeued vertex s
-            // If a adjacent has not been visited, then mark it
-            // visited and enqueue it
             Iterator<Integer> i = adj[s].listIterator();
 
             while (i.hasNext())
@@ -80,36 +78,31 @@ public class Graph {
         int i = 0;
         while(i < adj.length){
             Point point = vertices.get(i);
-            //System.out.println("Point: " +point);
             int n = 0;
             while(n < startingEdge.size()){
-                //System.out.println(startingEdge.get(n));
                 if(point.equals(startingEdge.get(n))){
                     Point anotherP = endingEdge.get(n);
                     int value = vertices.indexOf(anotherP);
                     adj[i].add(value);
-                    //System.out.println("Hagde bhai");
                 }
                 n++;
             }
-            /*n = 0;
+            n = 0;
             while(n < endingEdge.size()){
-                //System.out.println(startingEdge.get(n));
                 if(point.equals(endingEdge.get(n))){
                     Point anotherP = startingEdge.get(n);
                     int value = vertices.indexOf(anotherP);
                     adj[i].add(value);
-                    //System.out.println("Hagde bhai");
                 }
                 n++;
-            }*/
+            }
             i++;
         }
     }
 
     public void makeNodes() {
         adj = new LinkedList[nodes];
-        System.out.println(adj.length);
+        //System.out.println(adj.length);
         for (int i=0; i<nodes; ++i) {
             adj[i] = new LinkedList();
         }
@@ -118,7 +111,7 @@ public class Graph {
     public void lineEvaluation(String line) {
         if(line.length() >= 8) {
             if (line.substring(0, 4).equals("node")) {
-                System.out.println("Found node");
+                //System.out.println("Found node");
                 int verX = line.charAt(5) - '0';
                 int verY = line.charAt(7) - '0';
                 vertices.add(new Point(verX, verY));
@@ -130,88 +123,15 @@ public class Graph {
                 int endX = line.charAt(9) - '0';
                 int endY = line.charAt(11) - '0';
                 endingEdge.add(new Point(endX, endY));
-                System.out.println("Found edge");
+                //System.out.println("Found edge");
             } else if (line.substring(0, 4).equals("fire")) {
-                System.out.println("Found fire");
+                //System.out.println("Found fire");
             } else if (line.substring(0, 7).equals("station")) {
-                System.out.println("Found station");
+                //System.out.println("Found station");
             }
         }
         else{
-            System.out.println("Nothing here");
+            //System.out.println("Nothing here");
         }
     }
 }
-
-
-        /*Main g = new Main(3);
-
-        /*g.addEdge(0, 1);
-        g.addEdge(0, 2);
-        g.addEdge(1, 2);
-        g.addEdge(1, 4);
-        g.addEdge(2, 0);
-        g.addEdge(2, 3);
-        g.addEdge(3, 3);
-        g.addEdge(4, 3);
-        g.addEdge(4, 4);
-
-        System.out.println("Following is Breadth First Traversal "+
-                "(starting from vertex 0)");
-
-        g.BFS(0);*/
-
-    // Constructor
-    /*Main(int v)
-    {
-        V = v;
-        adj = new LinkedList[v];
-        for (int i=0; i<v; ++i)
-            adj[i] = new LinkedList();
-    }
-
-    // Function to add an edge into the graph
-    void addEdge(int v,int w)
-    {
-        adj[v].add(w);
-    }
-
-    // prints BFS traversal from a given source s
-    void BFS(int s)
-    {
-        // Mark all the vertices as not visited(By default
-        // set as false)
-        boolean visited[] = new boolean[V];
-
-        // Create a queue for BFS
-        LinkedList<Integer> queue = new LinkedList<Integer>();
-
-        // Mark the current node as visited and enqueue it
-        visited[s]=true;
-        queue.add(s);
-
-        while (queue.size() != 0)
-        {
-            // Dequeue a vertex from queue and print it
-            s = queue.poll();
-            System.out.print(s+":");
-
-            // Get all adjacent vertices of the dequeued vertex s
-            // If a adjacent has not been visited, then mark it
-            // visited and enqueue it
-            Iterator<Integer> i = adj[s].listIterator();
-
-            while (i.hasNext())
-            {
-                int n = i.next();
-                System.out.print("N = "+n+",");
-                if (!visited[n])
-                {
-                    visited[n] = true;
-                    queue.add(n);
-                }
-            }
-            System.out.println();
-        }
-    }
-}*/
