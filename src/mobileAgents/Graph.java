@@ -7,10 +7,6 @@ import java.util.*;
 public class Graph {
 
     private int nodeCounter;   // No. of vertices
-    private LinkedList[] adj; //Adjacency Lists
-    private ArrayList<Point> vertices = new ArrayList<>();
-    private ArrayList<Point> startingEdge = new ArrayList<>();
-    private ArrayList<Point> endingEdge = new ArrayList<>();
     private String file;
     private ArrayList<Sensor> sensors = new ArrayList<>();
     private Map<Point, Integer> mappingCoorToInt = new HashMap<>();
@@ -40,14 +36,16 @@ public class Graph {
     }
 
     private void printForTesting() {
-        ArrayList<Sensor> neighbors = new ArrayList<>();
+        ArrayList<Sensor> neighbors;
         for(int i = 0; i < nodeCounter; i++){
             System.out.println("X: " +sensors.get(i).getXCor());
             System.out.println("Y: " +sensors.get(i).getYCor());
-            System.out.println("ID: " +sensors.get(i).getId());
+            System.out.println("Sensor ID: " +sensors.get(i).getId());
             neighbors = sensors.get(i).getNeighbors();
             for(int j = 0; j < neighbors.size(); j++){
-                System.out.println("NeighborID: " +sensors.get(j).getId());
+                //System.out.print("X: " +neighbors.get(j).getXCor());
+                //System.out.println(" Y: " +neighbors.get(j).getYCor());
+                System.out.println("NeighborID: " +neighbors.get(j).getId());
             }
             System.out.println();
         }
@@ -62,16 +60,20 @@ public class Graph {
                 Sensor sensor = new Sensor(verX, verY, nodeCounter);
                 sensors.add(sensor);
                 mappingCoorToInt.put(new Point(verX, verY), nodeCounter);
-                vertices.add(new Point(verX, verY));
+
                 nodeCounter++;
             } else if (line.substring(0, 4).equals("edge")) {
                 int startX = line.charAt(5) - '0';
                 int startY = line.charAt(7) - '0';
-                Sensor sensorOne = sensors.get(getIDofPoint(new Point(startX, startY)));
+                int x = getIDofPoint(new Point(startX, startY));
+                //System.out.println("X: "+x);
+                Sensor sensorOne = sensors.get(x);
 
                 int endX = line.charAt(9) - '0';
                 int endY = line.charAt(11) - '0';
-                Sensor sensorTwo = sensors.get(getIDofPoint(new Point(endX, endY)));
+                int y = getIDofPoint(new Point(endX, endY));
+                //System.out.println("Y: "+y);
+                Sensor sensorTwo = sensors.get(y);
 
                 sensorOne.setNeighbors(sensorTwo);
                 sensorTwo.setNeighbors(sensorOne);
@@ -85,7 +87,12 @@ public class Graph {
 
     }
 
-    public void breadthFirstSearch(int s) {
+    public int getIDofPoint(Point p){
+        return mappingCoorToInt.get(p);
+    }
+
+
+    /*public void breadthFirstSearch(int s) {
         System.out.println();
         System.out.println("BFS starts here!");
         boolean visited[] = new boolean[nodeCounter];
@@ -112,12 +119,7 @@ public class Graph {
             }
             System.out.println();
         }
-    }
-
-
-    public int getIDofPoint(Point p){
-        return mappingCoorToInt.get(p);
-    }
+    }*/
 
 
 }
