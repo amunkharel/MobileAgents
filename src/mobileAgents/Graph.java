@@ -10,6 +10,7 @@ public class Graph {
     private String file;
     private ArrayList<Sensor> sensors = new ArrayList<>();
     private Map<Point, Integer> mappingCoorToInt = new HashMap<>();
+    int addingCounter;
 
     public Graph(String file){
         this.file = file;
@@ -51,32 +52,72 @@ public class Graph {
         }
     }
 
+    public int evaluateNumber(int n, String line, int lineLength){
+        int digit = 0;
+        int classNum = n;
+        while(classNum < lineLength && line.charAt(classNum) > 47 && line.charAt(classNum) < 58){
+            digit++;
+            classNum++;
+        }
+        addingCounter = digit;
+        int counter = 1;
+        while(digit > 1){
+            counter *= 10;
+            digit--;
+        }
+        int number = 0;
+        while(n < lineLength && line.charAt(n) > 47 && line.charAt(n) < 58){
+            number = number + counter * (line.charAt(n) - '0');
+            n++;
+            counter = counter/10;
+        }
+        return number;
+    }
+
 
     public void lineEvaluation(String line) {
         if(line.length() >= 8) {
             if (line.substring(0, 4).equals("node")) {
-                int verX = line.charAt(5) - '0';
-                int verY = line.charAt(7) - '0';
+                int n = 5;
+                int verX = evaluateNumber(n, line, line.length());
+                //System.out.println("VerX: "+verX);
+
+                n = n + addingCounter + 1;
+                int verY = evaluateNumber(n, line, line.length());
+                //System.out.println("VerY: "+verY);
+
                 Sensor sensor = new Sensor(verX, verY, nodeCounter);
                 sensors.add(sensor);
                 mappingCoorToInt.put(new Point(verX, verY), nodeCounter);
-
                 nodeCounter++;
             } else if (line.substring(0, 4).equals("edge")) {
-                int startX = line.charAt(5) - '0';
-                int startY = line.charAt(7) - '0';
-                int x = getIDofPoint(new Point(startX, startY));
-                //System.out.println("X: "+x);
-                Sensor sensorOne = sensors.get(x);
+                int n = 5;
+                int startX = evaluateNumber(n, line, line.length());
+                //System.out.println("startX: "+startX);
 
-                int endX = line.charAt(9) - '0';
-                int endY = line.charAt(11) - '0';
+                n = n + addingCounter + 1;
+                int startY = evaluateNumber(n, line, line.length());
+                //System.out.println("startY: "+startY);
+
+                int x = getIDofPoint(new Point(startX, startY));
+                Sensor sensorOne = sensors.get(x);
+                //System.out.println("X: "+x);
+
+                n = n + addingCounter + 1;
+                int endX = evaluateNumber(n, line, line.length());
+                //System.out.println("endX: "+endX);
+
+                n = n + addingCounter + 1;
+                int endY = evaluateNumber(n, line, line.length());
+               //System.out.println("endY: "+endY);
+
                 int y = getIDofPoint(new Point(endX, endY));
-                //System.out.println("Y: "+y);
                 Sensor sensorTwo = sensors.get(y);
+                //System.out.println("Y: "+y);
 
                 sensorOne.setNeighbors(sensorTwo);
                 sensorTwo.setNeighbors(sensorOne);
+
             } else if (line.substring(0, 4).equals("fire")) {
             } else if (line.substring(0, 7).equals("station")) {
             }
