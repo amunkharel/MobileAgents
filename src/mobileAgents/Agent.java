@@ -6,11 +6,9 @@ public class Agent {
 
     private Sensor sensor;
 
-    private ArrayList<Sensor> sensors;
 
-    public Agent (Sensor sensor, ArrayList<Sensor> sensors) {
+    public Agent (Sensor sensor) {
         this.sensor = sensor;
-        this.sensors = sensors;
     }
 
 

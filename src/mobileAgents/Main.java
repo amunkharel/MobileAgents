@@ -14,6 +14,7 @@ public class Main {
 
         Graph graph = new Graph("sample.txt");
         graph.readFile();
+        graph.initializeThreads();
 
         /*ExecutorService executorService = null;
 

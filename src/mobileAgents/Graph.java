@@ -3,6 +3,9 @@ package mobileAgents;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Graph {
 
@@ -38,7 +41,7 @@ public class Graph {
 
     private void printForTesting() {
         ArrayList<Sensor> neighbors;
-        for(int i = 0; i < nodeCounter; i++){
+        for(int i = 0; i < sensors.size(); i++){
             System.out.println("X: " +sensors.get(i).getXCor());
             System.out.println("Y: " +sensors.get(i).getYCor());
             System.out.println("Sensor ID: " +sensors.get(i).getId());
@@ -48,6 +51,7 @@ public class Graph {
                 //System.out.println(" Y: " +neighbors.get(j).getYCor());
                 System.out.println("NeighborID: " +neighbors.get(j).getId());
             }
+            System.out.println("Blocking Queue size: " + sensors.get(i).getBlockingQueuesize());
             System.out.println();
         }
     }
@@ -115,15 +119,45 @@ public class Graph {
                 Sensor sensorTwo = sensors.get(y);
                 //System.out.println("Y: "+y);
 
+                ArrayBlockingQueue<String> blockingQueue = new ArrayBlockingQueue<String>(5);
+
+                sensorOne.setQueues(blockingQueue);
+                sensorTwo.setQueues(blockingQueue);
+
                 sensorOne.setNeighbors(sensorTwo);
                 sensorTwo.setNeighbors(sensorOne);
 
             } else if (line.substring(0, 4).equals("fire")) {
+
+                int n = 5;
+                int fireX = evaluateNumber(n, line, line.length());
+
+                n = n + addingCounter + 1;
+                int fireY = evaluateNumber(n, line, line.length());
+
+                int x = getIDofPoint(new Point(fireX, fireY));
+                Sensor fireSensor = sensors.get(x);
+
+                fireSensor.setState('r');
+
+
             } else if (line.substring(0, 7).equals("station")) {
+
             }
         }
         else{
             //System.out.println("Nothing here");
+        }
+
+    }
+
+    public void initializeThreads() {
+        ExecutorService executorService = Executors.newFixedThreadPool(sensors.size());
+
+        while (true) {
+            for (int i = 0; i < sensors.size(); i++) {
+                executorService.execute(sensors.get(i));
+            }
         }
 
     }
