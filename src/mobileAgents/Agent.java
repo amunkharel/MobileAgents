@@ -12,6 +12,8 @@ public class Agent implements Runnable {
 
     private int numberOfNodes;
 
+    private ArrayList<Sensor> sensors = new ArrayList<>();
+
 
     public Agent (Sensor sensor, int numberOfNodes) {
         this.sensor = sensor;
@@ -27,27 +29,35 @@ public class Agent implements Runnable {
 
     public void randomWalk() {
         if(!foundYellow) {
+
+
             int s = sensor.getId();
+
+            Sensor sensor = this.sensor;
+
             boolean visited[] = new boolean[this.numberOfNodes];
 
-            LinkedList<Integer> queue = new LinkedList<Integer>();
+            LinkedList<Sensor> queue = new LinkedList<Sensor>();
 
 
             visited[s] = true;
 
-            queue.add(s);
+            queue.add(sensor);
 
             while (sensor.getState() != 'y') {
-                s = queue.poll();
-                System.out.println("Agent is at sensor " + s);
+                sensor = queue.poll();
+                this.sensor = sensor;
+                System.out.println("Agent is at sensor " + sensor.getId());
+
 
                 for (int i = 0; i < sensor.getNeighbors().size(); i++) {
                     int n  = sensor.getNeighbors().get(i).getId();
                     if(!visited[n]){
                         visited[n] = true;
-                        queue.add(n);
+                        queue.add(sensor.getNeighbors().get(i));
                     }
                 }
+
             }
 
 

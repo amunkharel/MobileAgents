@@ -162,16 +162,25 @@ public class Graph {
 
     }
 
-    public void initializeThreads() {
+    public void initializeThreads() throws  InterruptedException{
+
+        int counter = 0;
         ExecutorService executorService = Executors.newFixedThreadPool(sensors.size());
 
-        while (true) {
+        while (counter != 2) {
             for (int i = 0; i < sensors.size(); i++) {
-                executorService.execute(sensors.get(i));
-            }
+                Thread t1 = new Thread(sensors.get(i));
+                t1.start();
 
-            new  Thread(startingAgent).start();
+                t1.join();
+            }
+            counter++;
+
         }
+
+
+
+        new  Thread(startingAgent).start();
 
     }
 
