@@ -99,10 +99,13 @@ public class Sensor implements  Runnable{
 
                     if(!queues.get(i).isEmpty()) {
 
-                        if(queues.get(i).take().equals("Turn Yellow") ) {
-                            this.state = 'y';
-                            System.out.println("Sensor " + this.id + "" +
-                                    "knows it's neighbor is on fire");
+                        for(int j = 0; j < queues.get(i).size(); j++) {
+                            if(queues.get(i).contains("Turn Yellow")) {
+                                this.state = 'y';
+                                System.out.println("Sensor " + this.id + "" +
+                                        "knows it's neighbor is on fire");
+                                queues.get(i).remove("Turn Yellow");
+                            }
                         }
 
                         Thread.sleep(1000);
@@ -119,5 +122,9 @@ public class Sensor implements  Runnable{
 
     public int getBlockingQueuesize() {
         return this.queues.size();
+    }
+
+    public  char getState() {
+        return this.state;
     }
 }

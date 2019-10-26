@@ -15,6 +15,8 @@ public class Graph {
     private Map<Point, Integer> mappingCoorToInt = new HashMap<>();
     int addingCounter;
 
+    private Agent startingAgent = null;
+
     public Graph(String file){
         this.file = file;
     }
@@ -142,6 +144,15 @@ public class Graph {
 
 
             } else if (line.substring(0, 7).equals("station")) {
+                int n = 5;
+                int stationX = evaluateNumber(n, line, line.length());
+
+                n = n + addingCounter + 1;
+                int stationY = evaluateNumber(n, line, line.length());
+
+                int x = getIDofPoint(new Point(stationX, stationY));
+                Sensor baseStation = sensors.get(x);
+                startingAgent = new Agent(baseStation, sensors.size());
 
             }
         }
@@ -158,6 +169,8 @@ public class Graph {
             for (int i = 0; i < sensors.size(); i++) {
                 executorService.execute(sensors.get(i));
             }
+
+            new  Thread(startingAgent).start();
         }
 
     }
