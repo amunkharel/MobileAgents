@@ -12,6 +12,10 @@ public class Sensor implements  Runnable{
 
     private int id;
 
+    private boolean hasAgent;
+
+    private int agentNumber;
+
     private ArrayList<Sensor> neighbors;
 
     ArrayList<BlockingQueue<String>> queues = new ArrayList<>();
@@ -126,5 +130,19 @@ public class Sensor implements  Runnable{
 
     public  char getState() {
         return this.state;
+    }
+
+    public void addAgent(int agentNumber) {
+        hasAgent = true;
+        this.agentNumber = agentNumber;
+        System.out.println("Agent " + agentNumber + " is at sensor " + this.id);
+    }
+
+    public void removeAgent() {
+        hasAgent = false;
+    }
+
+    public boolean hasAgent() {
+        return hasAgent;
     }
 }

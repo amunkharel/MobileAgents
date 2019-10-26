@@ -153,6 +153,7 @@ public class Graph {
                 int x = getIDofPoint(new Point(stationX, stationY));
                 Sensor baseStation = sensors.get(x);
                 startingAgent = new Agent(baseStation, sensors.size());
+                startingAgent.setFoundYellow(false);
 
             }
         }
@@ -164,23 +165,30 @@ public class Graph {
 
     public void initializeThreads() throws  InterruptedException{
 
+        Thread t1 = null;
         int counter = 0;
-        ExecutorService executorService = Executors.newFixedThreadPool(sensors.size());
 
         while (counter != 2) {
             for (int i = 0; i < sensors.size(); i++) {
-                Thread t1 = new Thread(sensors.get(i));
+                t1 = new Thread(sensors.get(i));
                 t1.start();
 
-                t1.join();
+
             }
             counter++;
 
+            t1.join();
+
         }
+        t1 = new Thread(startingAgent);
+
+
+        t1.start();
+
+        t1.join();
 
 
 
-        new  Thread(startingAgent).start();
 
     }
 
