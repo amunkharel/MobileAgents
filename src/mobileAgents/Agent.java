@@ -1,5 +1,7 @@
 package mobileAgents;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -64,9 +66,7 @@ public class Agent implements Runnable {
     }
 
     public void recurseYellowNeighbor(Sensor sensor) {
-        boolean visited[] = new boolean[numberOfNodes];
-
-        if(visited[sensor.getId()] == true){
+        if(sensor.hasAgent() == true){
             return;
         }
         if(sensor.getState() != 'y'){
@@ -74,7 +74,6 @@ public class Agent implements Runnable {
                 Agent agent = new Agent(sensor, numberOfNodes);
                 agentNumber++;
                 sensor.addAgent(agentNumber);
-                visited[sensor.getId()] = true;
                 return;
             }
             else if(sensor.getState() == 'r') {
@@ -85,7 +84,6 @@ public class Agent implements Runnable {
             Agent agent = new Agent(sensor, numberOfNodes);
             agentNumber++;
             sensor.addAgent(agentNumber);
-            visited[sensor.getId()] = true;
             for(int i = 0; i < sensor.getNeighbors().size(); i++) {
                 recurseYellowNeighbor(sensor.getNeighbors().get(i));
             }
