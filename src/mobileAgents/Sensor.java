@@ -145,4 +145,8 @@ public class Sensor implements  Runnable{
     public boolean hasAgent() {
         return hasAgent;
     }
+
+    public int getAgentNumber() {
+        return agentNumber;
+    }
 }

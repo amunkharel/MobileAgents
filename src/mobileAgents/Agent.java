@@ -55,7 +55,7 @@ public class Agent implements Runnable {
 
     public void checkNeighborAndCloneAgent() {
         if(foundYellow) {
-            System.out.println("Sensor " + sensor.getId() );
+            System.out.println("Sensor " + sensor.getId() + " Agent A" + sensor.getAgentNumber() );
 
             for(int i = 0; i < sensor.getNeighbors().size(); i++) {
                 if(sensor.getNeighbors().get(i).getState() == 'b' &&
