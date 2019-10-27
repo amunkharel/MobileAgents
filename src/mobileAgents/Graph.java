@@ -16,6 +16,8 @@ public class Graph {
 
     private Agent startingAgent = null;
 
+    private Sensor baseStation = null;
+
     public Graph(String file){
         this.file = file;
     }
@@ -150,7 +152,7 @@ public class Graph {
                 int stationY = evaluateNumber(n, line, line.length());
 
                 int x = getIDofPoint(new Point(stationX, stationY));
-                Sensor baseStation = sensors.get(x);
+                baseStation = sensors.get(x);
                 startingAgent = new Agent(baseStation, sensors.size());
                 startingAgent.setFoundYellow(false);
 
@@ -184,6 +186,22 @@ public class Graph {
         t1.start();
 
         t1.join();
+
+
+        while (baseStation.getState() != 'r') {
+            for (int i = 0; i < sensors.size(); i++) {
+                t1 = new Thread(sensors.get(i));
+                t1.start();
+
+
+            }
+
+            t1.join();
+
+            t1 = new Thread(startingAgent);
+            t1.start();
+            t1.join();
+        }
 
 
 

@@ -16,6 +16,8 @@ public class Agent implements Runnable {
 
     private ArrayList<Sensor> sensors = new ArrayList<>();
 
+    private ArrayList<Sensor> agents = new ArrayList<>();
+
 
     public Agent (Sensor sensor, int numberOfNodes) {
         this.sensor = sensor;
@@ -37,11 +39,23 @@ public class Agent implements Runnable {
 
         checkNeighborAndCloneAgent();
 
+        setAgentOnFire();
+
+
+    }
+
+    public void setAgentOnFire() {
+        Sensor sensor = agents.get(0);
+        sensor.removeAgent();
+        sensor.setState('r');
+        agents.remove(0);
+
+        this.sensor = agents.get(0);
     }
 
     public void checkNeighborAndCloneAgent() {
         if(foundYellow) {
-            System.out.println("Sensor " + sensor.getId());
+            System.out.println("Sensor " + sensor.getId() );
 
             for(int i = 0; i < sensor.getNeighbors().size(); i++) {
                 if(sensor.getNeighbors().get(i).getState() == 'b' &&
@@ -49,6 +63,7 @@ public class Agent implements Runnable {
                     Agent agent1 = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
                     agentNumber++;
                     sensor.getNeighbors().get(i).addAgent(agentNumber);
+                    agents.add(sensor.getNeighbors().get(i));
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -64,6 +79,8 @@ public class Agent implements Runnable {
         }
     }
 
+
+
     public void recurseYellowNeighbor(Sensor sensor) {
         if(sensor.hasAgent() == true){
             return;
@@ -73,6 +90,7 @@ public class Agent implements Runnable {
                 Agent agent = new Agent(sensor, numberOfNodes);
                 agentNumber++;
                 sensor.addAgent(agentNumber);
+                agents.add(sensor);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -89,6 +107,7 @@ public class Agent implements Runnable {
             Agent agent = new Agent(sensor, numberOfNodes);
             agentNumber++;
             sensor.addAgent(agentNumber);
+            agents.add(sensor);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -98,6 +117,7 @@ public class Agent implements Runnable {
                 recurseYellowNeighbor(sensor.getNeighbors().get(i));
             }
         }
+
 
     }
 
@@ -141,6 +161,7 @@ public class Agent implements Runnable {
                     sensor.removeAgent();
                 }
                 else {
+                    agents.add(sensor);
                     foundYellow = true;
                 }
 
