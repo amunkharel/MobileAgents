@@ -34,7 +34,66 @@ public class Agent implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        checkNeighborAndCloneAgent();
+
     }
+
+    public void checkNeighborAndCloneAgent() {
+        if(foundYellow) {
+            System.out.println("Sensor " + sensor.getId());
+
+            for(int i = 0; i < sensor.getNeighbors().size(); i++) {
+                if(sensor.getNeighbors().get(i).getState() == 'b') {
+                    Agent agent1 = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
+                    agentNumber++;
+                    sensor.getNeighbors().get(i).addAgent(agentNumber);
+                }
+
+                if(sensor.getNeighbors().get(i).getState() == 'y') {
+                    recurseYellowNeighbor(sensor.getNeighbors().get(i));
+                }
+
+                /*if(sensor.getNeighbors().get(i).getState() == 'y') {
+                    Agent agent = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
+                    agentNumber++;
+                    sensor.getNeighbors().get(i).addAgent(agentNumber);
+                } */
+            }
+        }
+    }
+
+    public void recurseYellowNeighbor(Sensor sensor) {
+        boolean visited[] = new boolean[numberOfNodes];
+
+        if(visited[sensor.getId()] == true){
+            return;
+        }
+        if(sensor.getState() != 'y'){
+            if(sensor.getState() == 'b') {
+                Agent agent = new Agent(sensor, numberOfNodes);
+                agentNumber++;
+                sensor.addAgent(agentNumber);
+                visited[sensor.getId()] = true;
+                return;
+            }
+            else if(sensor.getState() == 'r') {
+                return;
+            }
+        }
+        else{
+            Agent agent = new Agent(sensor, numberOfNodes);
+            agentNumber++;
+            sensor.addAgent(agentNumber);
+            visited[sensor.getId()] = true;
+            for(int i = 0; i < sensor.getNeighbors().size(); i++) {
+                recurseYellowNeighbor(sensor.getNeighbors().get(i));
+            }
+        }
+
+    }
+
+
 
     public void randomWalk() throws InterruptedException {
         if(!foundYellow) {
@@ -73,8 +132,10 @@ public class Agent implements Runnable {
                 if(sensor.getState() != 'y') {
                     sensor.removeAgent();
                 }
+                else {
+                    foundYellow = true;
+                }
 
-                System.out.println(sensor.hasAgent());
 
             }
 
