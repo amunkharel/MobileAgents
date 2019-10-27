@@ -4,8 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 public class Graph {
 
@@ -158,7 +157,6 @@ public class Graph {
             }
         }
         else{
-            //System.out.println("Nothing here");
         }
 
     }
@@ -195,36 +193,6 @@ public class Graph {
     public int getIDofPoint(Point p){
         return mappingCoorToInt.get(p);
     }
-
-
-    /*public void breadthFirstSearch(int s) {
-        System.out.println();
-        System.out.println("BFS starts here!");
-        boolean visited[] = new boolean[nodeCounter];
-
-        LinkedList<Integer> queue = new LinkedList<>();
-        visited[s]=true;
-        queue.add(s);
-
-        while (queue.size() != 0)
-        {
-            s = queue.poll();
-            System.out.print(s+":");
-            Iterator<Integer> i = adj[s].listIterator();
-
-            while (i.hasNext())
-            {
-                int n = i.next();
-                System.out.print(" N = "+n+",");
-                if (!visited[n])
-                {
-                    visited[n] = true;
-                    queue.add(n);
-                }
-            }
-            System.out.println();
-        }
-    }*/
 
 
 }

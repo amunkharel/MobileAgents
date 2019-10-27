@@ -1,9 +1,7 @@
 package mobileAgents;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Agent implements Runnable {
@@ -46,21 +44,22 @@ public class Agent implements Runnable {
             System.out.println("Sensor " + sensor.getId());
 
             for(int i = 0; i < sensor.getNeighbors().size(); i++) {
-                if(sensor.getNeighbors().get(i).getState() == 'b') {
+                if(sensor.getNeighbors().get(i).getState() == 'b' &&
+                    !sensor.getNeighbors().get(i).hasAgent()) {
                     Agent agent1 = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
                     agentNumber++;
                     sensor.getNeighbors().get(i).addAgent(agentNumber);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 if(sensor.getNeighbors().get(i).getState() == 'y') {
                     recurseYellowNeighbor(sensor.getNeighbors().get(i));
                 }
 
-                /*if(sensor.getNeighbors().get(i).getState() == 'y') {
-                    Agent agent = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
-                    agentNumber++;
-                    sensor.getNeighbors().get(i).addAgent(agentNumber);
-                } */
             }
         }
     }
@@ -74,6 +73,12 @@ public class Agent implements Runnable {
                 Agent agent = new Agent(sensor, numberOfNodes);
                 agentNumber++;
                 sensor.addAgent(agentNumber);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 return;
             }
             else if(sensor.getState() == 'r') {
@@ -84,6 +89,11 @@ public class Agent implements Runnable {
             Agent agent = new Agent(sensor, numberOfNodes);
             agentNumber++;
             sensor.addAgent(agentNumber);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             for(int i = 0; i < sensor.getNeighbors().size(); i++) {
                 recurseYellowNeighbor(sensor.getNeighbors().get(i));
             }
