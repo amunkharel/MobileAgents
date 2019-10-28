@@ -24,4 +24,5 @@ edge 7 0 8 1
 edge 8 1 7 2
 station 0 0
 fire 8 1
+fire 2 2
 

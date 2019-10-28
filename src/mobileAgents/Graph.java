@@ -165,6 +165,7 @@ public class Graph {
 
     public void initializeThreads() throws  InterruptedException{
 
+        ArrayList<Sensor> agents = new ArrayList<>();
         Thread t1 = null;
         int counter = 0;
 
@@ -180,6 +181,7 @@ public class Graph {
             t1.join();
 
         }
+        sensors.get(0).setIsInitialized(true);
         t1 = new Thread(startingAgent);
 
 
@@ -187,20 +189,33 @@ public class Graph {
 
         t1.join();
 
+        counter = 0;
+
+        agents = startingAgent.getAgents();
 
         while (baseStation.getState() != 'r') {
-            for (int i = 0; i < sensors.size(); i++) {
-                t1 = new Thread(sensors.get(i));
-                t1.start();
+
+            while (counter != 2) {
+                for (int i = 0; i < sensors.size(); i++) {
+                    t1 = new Thread(sensors.get(i));
+                    t1.start();
+                    t1.join();
+                }
 
 
+                counter++;
             }
 
-            t1.join();
+            counter = 0;
 
-            t1 = new Thread(startingAgent);
+
+
+            Agent agent = new Agent(agents.get(0), sensors.size());
+            t1 = new Thread(agent);
             t1.start();
             t1.join();
+
+
         }
 
 

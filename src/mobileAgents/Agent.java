@@ -3,6 +3,9 @@ package mobileAgents;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Agent implements Runnable {
 
@@ -14,15 +17,18 @@ public class Agent implements Runnable {
 
     private static  int agentNumber = 0;
 
+    private static Lock lock;
+
     private ArrayList<Sensor> sensors = new ArrayList<>();
 
-    private ArrayList<Sensor> agents = new ArrayList<>();
+    private static ArrayList<Sensor> agents = new ArrayList<>();
 
 
     public Agent (Sensor sensor, int numberOfNodes) {
         this.sensor = sensor;
         this.foundYellow = true;
         this.numberOfNodes = numberOfNodes;
+        lock = new ReentrantLock();
     }
 
     public void setFoundYellow(boolean foundYellow) {
@@ -33,50 +39,64 @@ public class Agent implements Runnable {
     public void run() {
         try {
             randomWalk();
+            checkNeighborAndCloneAgent();
+            setAgentOnFire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        checkNeighborAndCloneAgent();
 
-        setAgentOnFire();
+
+
 
 
     }
 
-    public void setAgentOnFire() {
-        Sensor sensor = agents.get(0);
-        sensor.removeAgent();
-        sensor.setState('r');
-        agents.remove(0);
+    public void setAgentOnFire() throws InterruptedException{
+            Sensor sensor = this.sensor;
+            sensor.removeAgent();
+            sensor.setState('r');
 
-        this.sensor = agents.get(0);
-    }
-
-    public void checkNeighborAndCloneAgent() {
-        if(foundYellow) {
-            System.out.println("Sensor " + sensor.getId() + " Agent A" + sensor.getAgentNumber() );
-
-            for(int i = 0; i < sensor.getNeighbors().size(); i++) {
-                if(sensor.getNeighbors().get(i).getState() == 'b' &&
-                    !sensor.getNeighbors().get(i).hasAgent()) {
-                    Agent agent1 = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
-                    agentNumber++;
-                    sensor.getNeighbors().get(i).addAgent(agentNumber);
-                    agents.add(sensor.getNeighbors().get(i));
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            for(int i = 0; i < agents.size(); i++) {
+                if(agents.get(i).getId() == sensor.getId()) {
+                    agents.remove(i);
                 }
-
-                if(sensor.getNeighbors().get(i).getState() == 'y') {
-                    recurseYellowNeighbor(sensor.getNeighbors().get(i));
-                }
-
             }
-        }
+
+
+
+
+    }
+
+    public void checkNeighborAndCloneAgent()  {
+            if(foundYellow) {
+                System.out.println("Sensor " + sensor.getId() + " Agent A" + sensor.getAgentNumber() );
+
+                for(int i = 0; i < sensor.getNeighbors().size(); i++) {
+                    if(sensor.getNeighbors().get(i).getState() == 'b' &&
+                            !sensor.getNeighbors().get(i).hasAgent()) {
+                        Agent agent1 = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
+                        agentNumber++;
+                        sensor.getNeighbors().get(i).addAgent(agentNumber);
+                        agents.add(sensor.getNeighbors().get(i));
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(sensor.getNeighbors().get(i).getState() == 'y') {
+                        recurseYellowNeighbor(sensor.getNeighbors().get(i));
+                    }
+
+                }
+            }
+
+
+
+
+
     }
 
 
@@ -170,5 +190,9 @@ public class Agent implements Runnable {
 
 
         }
+    }
+
+    public ArrayList<Sensor> getAgents() {
+        return agents;
     }
 }
