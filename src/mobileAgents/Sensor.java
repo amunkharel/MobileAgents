@@ -89,27 +89,21 @@ public class Sensor implements  Runnable{
             if(state == 'r' && sentMessageAfterBecomingRed) {
                 for (int i = 0; i < neighbors.size(); i++) {
                     if(!neighbors.get(i).hasAgent()  && neighbors.get(i).getState() != 'r') {
-                        System.out.println("Neighbors of " + this.getId() + " Sensor " + neighbors.get(i).getId());
-
+                        int counter = 0;
                         for (int j = 0; j < neighbors.get(i).getNeighbors().size(); j++) {
-
-                            if(!neighbors.get(i).getNeighbors().get(j).hasAgent() &&
-                            neighbors.get(i).getNeighbors().get(j).getState() != 'r') {
-
-                                System.out.println("Neighbors of " + neighbors.get(i).getId() + " Sensor " +
-                                        neighbors.get(i).getNeighbors().get(j).getId());
-
-                                neighbors.get(i).setState('r');
-                                System.out.println("Sensor " + neighbors.get(i).getId() + " is on fire");
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                            if(!neighbors.get(i).getNeighbors().get(j).hasAgent()) {
+                                counter++;
                             }
-
                         }
-
+                        if(counter == neighbors.get(i).getNeighbors().size()){
+                            neighbors.get(i).setState('r');
+                            System.out.println("Sensor " + neighbors.get(i).getId() + " is on fire");
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }
