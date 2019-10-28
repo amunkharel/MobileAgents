@@ -92,10 +92,13 @@ public class Graph {
                 int fireY = evaluateNumber(n, line, line.length());
                 fireNodes.add(new Point(fireX, fireY));
             }else if (line.substring(0, 7).equals("station")) {
-                int n = 5;
+                int n = 8;
                 stationX = evaluateNumber(n, line, line.length());
                 n = n + addingCounter + 1;
                 stationY = evaluateNumber(n, line, line.length());
+
+                //System.out.println("StationX: "+stationX);
+                //System.out.println("StationY: "+stationY);
             }
         }
     }
@@ -143,6 +146,8 @@ public class Graph {
             fireSensor.setState('r');
         }
 
+        //System.out.println("StationX: "+stationX);
+        //System.out.println("StationY: "+stationY);
         int x = getIDofPoint(new Point(stationX, stationY));
         baseStation = sensors.get(x);
         startingAgent = new Agent(baseStation, sensors.size());
@@ -150,7 +155,6 @@ public class Graph {
     }
 
     public void initializeThreads() throws  InterruptedException{
-
         ArrayList<Sensor> agents = new ArrayList<>();
         Thread t1 = null;
         int counter = 0;
