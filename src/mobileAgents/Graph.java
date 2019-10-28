@@ -8,14 +8,17 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class Graph {
 
-    private int nodeCounter;   // No. of vertices
     private String file;
     private ArrayList<Sensor> sensors = new ArrayList<>();
     private Map<Point, Integer> mappingCoorToInt = new HashMap<>();
-    int addingCounter;
+    private int addingCounter;
+    private ArrayList<Point> nodes = new ArrayList<>();
+    private ArrayList<Point> startingEdge = new ArrayList<>();
+    private ArrayList<Point> endingEdge = new ArrayList<>();
+    private ArrayList<Point> fireNodes = new ArrayList<>();
+    private int stationX, stationY;
 
     private Agent startingAgent = null;
-
     private Sensor baseStation = null;
 
     public Graph(String file){
@@ -37,26 +40,7 @@ public class Graph {
         catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Number of vertices: "+nodeCounter);
-        printForTesting();
-        //breadthFirstSearch(0);
-    }
-
-    private void printForTesting() {
-        ArrayList<Sensor> neighbors;
-        for(int i = 0; i < sensors.size(); i++){
-            System.out.println("X: " +sensors.get(i).getXCor());
-            System.out.println("Y: " +sensors.get(i).getYCor());
-            System.out.println("Sensor ID: " +sensors.get(i).getId());
-            neighbors = sensors.get(i).getNeighbors();
-            for(int j = 0; j < neighbors.size(); j++){
-                //System.out.print("X: " +neighbors.get(j).getXCor());
-                //System.out.println(" Y: " +neighbors.get(j).getYCor());
-                System.out.println("NeighborID: " +neighbors.get(j).getId());
-            }
-            System.out.println("Blocking Queue size: " + sensors.get(i).getBlockingQueuesize());
-            System.out.println();
-        }
+        //printForTesting();
     }
 
     public int evaluateNumber(int n, String line, int lineLength){
@@ -87,80 +71,82 @@ public class Graph {
             if (line.substring(0, 4).equals("node")) {
                 int n = 5;
                 int verX = evaluateNumber(n, line, line.length());
-                //System.out.println("VerX: "+verX);
-
                 n = n + addingCounter + 1;
                 int verY = evaluateNumber(n, line, line.length());
-                //System.out.println("VerY: "+verY);
-
-                Sensor sensor = new Sensor(verX, verY, nodeCounter);
-                sensors.add(sensor);
-                mappingCoorToInt.put(new Point(verX, verY), nodeCounter);
-                nodeCounter++;
-            } else if (line.substring(0, 4).equals("edge")) {
+                nodes.add(new Point(verX, verY));
+            }else if (line.substring(0, 4).equals("edge")) {
                 int n = 5;
                 int startX = evaluateNumber(n, line, line.length());
-                //System.out.println("startX: "+startX);
-
                 n = n + addingCounter + 1;
                 int startY = evaluateNumber(n, line, line.length());
-                //System.out.println("startY: "+startY);
-
-                int x = getIDofPoint(new Point(startX, startY));
-                Sensor sensorOne = sensors.get(x);
-                //System.out.println("X: "+x);
-
+                startingEdge.add(new Point(startX, startY));
                 n = n + addingCounter + 1;
                 int endX = evaluateNumber(n, line, line.length());
-                //System.out.println("endX: "+endX);
-
                 n = n + addingCounter + 1;
                 int endY = evaluateNumber(n, line, line.length());
-               //System.out.println("endY: "+endY);
-
-                int y = getIDofPoint(new Point(endX, endY));
-                Sensor sensorTwo = sensors.get(y);
-                //System.out.println("Y: "+y);
-
-                ArrayBlockingQueue<String> blockingQueue = new ArrayBlockingQueue<String>(5);
-
-                sensorOne.setQueues(blockingQueue);
-                sensorTwo.setQueues(blockingQueue);
-
-                sensorOne.setNeighbors(sensorTwo);
-                sensorTwo.setNeighbors(sensorOne);
-
+                endingEdge.add(new Point(endX, endY));
             } else if (line.substring(0, 4).equals("fire")) {
-
                 int n = 5;
                 int fireX = evaluateNumber(n, line, line.length());
-
                 n = n + addingCounter + 1;
                 int fireY = evaluateNumber(n, line, line.length());
-
-                int x = getIDofPoint(new Point(fireX, fireY));
-                Sensor fireSensor = sensors.get(x);
-
-                fireSensor.setState('r');
-
-
-            } else if (line.substring(0, 7).equals("station")) {
+                fireNodes.add(new Point(fireX, fireY));
+            }else if (line.substring(0, 7).equals("station")) {
                 int n = 5;
-                int stationX = evaluateNumber(n, line, line.length());
-
+                stationX = evaluateNumber(n, line, line.length());
                 n = n + addingCounter + 1;
-                int stationY = evaluateNumber(n, line, line.length());
-
-                int x = getIDofPoint(new Point(stationX, stationY));
-                baseStation = sensors.get(x);
-                startingAgent = new Agent(baseStation, sensors.size());
-                startingAgent.setFoundYellow(false);
-
+                stationY = evaluateNumber(n, line, line.length());
             }
         }
-        else{
+    }
+
+    public void accessStoredInfoFromFile(){
+        for(int i = 0; i < nodes.size(); i++){
+            int verX = nodes.get(i).x;
+            //System.out.print("VerX: "+verX);
+            int verY = nodes.get(i).y;
+            //System.out.println(" VerY: "+verY);
+            Sensor sensor = new Sensor(verX, verY, i);
+            sensors.add(sensor);
+            mappingCoorToInt.put(new Point(verX, verY), i);
+        }
+        for(int i = 0; i < startingEdge.size(); i++){
+            int startX = startingEdge.get(i).x;
+            //System.out.print("StartX: "+startX);
+            int startY = startingEdge.get(i).y;
+            //System.out.println(" StartY: "+startY);
+            int x = getIDofPoint(new Point(startX, startY));
+            Sensor sensorOne = sensors.get(x);
+
+            int endX = endingEdge.get(i).x;
+            //System.out.print("EndX: "+endX);
+            int endY = endingEdge.get(i).y;
+            //System.out.println(" EndY: "+endY);
+            int y = getIDofPoint(new Point(endX, endY));
+            Sensor sensorTwo = sensors.get(y);
+
+            ArrayBlockingQueue<String> blockingQueue = new ArrayBlockingQueue<String>(5);
+            sensorOne.setQueues(blockingQueue);
+            sensorTwo.setQueues(blockingQueue);
+
+            sensorOne.setNeighbors(sensorTwo);
+            sensorTwo.setNeighbors(sensorOne);
+        }
+        for(int i = 0; i < fireNodes.size(); i++){
+            int fireX = fireNodes.get(i).x;
+            //System.out.print("FireX: "+fireX);
+            int fireY = fireNodes.get(i).y;
+            //System.out.println("FireY: "+fireY);
+
+            int x = getIDofPoint(new Point(fireX, fireY));
+            Sensor fireSensor = sensors.get(x);
+            fireSensor.setState('r');
         }
 
+        int x = getIDofPoint(new Point(stationX, stationY));
+        baseStation = sensors.get(x);
+        startingAgent = new Agent(baseStation, sensors.size());
+        startingAgent.setFoundYellow(false);
     }
 
     public void initializeThreads() throws  InterruptedException{
@@ -226,6 +212,23 @@ public class Graph {
     public int getIDofPoint(Point p){
         return mappingCoorToInt.get(p);
     }
+
+    /*private void printForTesting() {
+        ArrayList<Sensor> neighbors;
+        for(int i = 0; i < sensors.size(); i++){
+            System.out.println("X: " +sensors.get(i).getXCor());
+            System.out.println("Y: " +sensors.get(i).getYCor());
+            System.out.println("Sensor ID: " +sensors.get(i).getId());
+            neighbors = sensors.get(i).getNeighbors();
+            for(int j = 0; j < neighbors.size(); j++){
+                //System.out.print("X: " +neighbors.get(j).getXCor());
+                //System.out.println(" Y: " +neighbors.get(j).getYCor());
+                System.out.println("NeighborID: " +neighbors.get(j).getId());
+            }
+            System.out.println("Blocking Queue size: " + sensors.get(i).getBlockingQueuesize());
+            System.out.println();
+        }
+    }*/
 
 
 }
