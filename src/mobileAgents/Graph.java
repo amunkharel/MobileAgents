@@ -137,17 +137,13 @@ public class Graph {
         }
         for(int i = 0; i < fireNodes.size(); i++){
             int fireX = fireNodes.get(i).x;
-            //System.out.print("FireX: "+fireX);
             int fireY = fireNodes.get(i).y;
-            //System.out.println("FireY: "+fireY);
 
             int x = getIDofPoint(new Point(fireX, fireY));
             Sensor fireSensor = sensors.get(x);
             fireSensor.setState('r');
         }
 
-        //System.out.println("StationX: "+stationX);
-        //System.out.println("StationY: "+stationY);
         int x = getIDofPoint(new Point(stationX, stationY));
         baseStation = sensors.get(x);
         startingAgent = new Agent(baseStation, sensors.size());
