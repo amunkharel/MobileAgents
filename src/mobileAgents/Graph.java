@@ -216,22 +216,8 @@ public class Graph {
         return mappingCoorToInt.get(p);
     }
 
-    /*private void printForTesting() {
-        ArrayList<Sensor> neighbors;
-        for(int i = 0; i < sensors.size(); i++){
-            System.out.println("X: " +sensors.get(i).getXCor());
-            System.out.println("Y: " +sensors.get(i).getYCor());
-            System.out.println("Sensor ID: " +sensors.get(i).getId());
-            neighbors = sensors.get(i).getNeighbors();
-            for(int j = 0; j < neighbors.size(); j++){
-                //System.out.print("X: " +neighbors.get(j).getXCor());
-                //System.out.println(" Y: " +neighbors.get(j).getYCor());
-                System.out.println("NeighborID: " +neighbors.get(j).getId());
-            }
-            System.out.println("Blocking Queue size: " + sensors.get(i).getBlockingQueuesize());
-            System.out.println();
-        }
-    }*/
 
-
+    public ArrayList<Sensor> getSensors() {
+        return sensors;
+    }
 }

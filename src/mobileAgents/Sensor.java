@@ -184,4 +184,6 @@ public class Sensor implements  Runnable{
     public int getAgentNumber() {
         return agentNumber;
     }
+
+
 }
