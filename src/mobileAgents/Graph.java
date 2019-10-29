@@ -7,7 +7,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 
 public class Graph {
-
     private String file;
     private ArrayList<Sensor> sensors = new ArrayList<>();
     private Map<Point, Integer> mappingCoorToInt = new HashMap<>();
@@ -40,7 +39,6 @@ public class Graph {
         catch (IOException e) {
             e.printStackTrace();
         }
-        //printForTesting();
     }
 
     public int evaluateNumber(int n, String line, int lineLength){
@@ -145,6 +143,7 @@ public class Graph {
         baseStation = sensors.get(x);
         startingAgent = new Agent(baseStation, sensors.size());
         startingAgent.setFoundYellow(false);
+
     }
 
     public void initializeThreads() throws  InterruptedException{
@@ -216,6 +215,14 @@ public class Graph {
 
     public ArrayList<Sensor> getSensors() {
         return sensors;
+    }
+
+    public int getStationX(){
+        return stationX;
+    }
+
+    public int getStationY(){
+        return stationY;
     }
 
 }

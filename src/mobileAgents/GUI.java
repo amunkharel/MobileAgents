@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,10 @@ public class GUI {
     private GraphicsContext gc;
 
     private ArrayList<Sensor> sensors = new ArrayList<>();
+
+    private int stationX;
+
+    private int stationY;
 
 
     public GUI(Graph graph, Canvas canvas) {
@@ -30,8 +35,14 @@ public class GUI {
         this.sensors = sensors;
     }
 
+    public void setStationX(int stationX){this.stationX = stationX;}
+
+    public void setStationY(int stationY){this.stationY = stationY;}
+
 
     public void updateCanvas() {
+        System.out.println(stationX);
+        System.out.println(stationY);
         int row;
         int column;
         char state;
@@ -49,10 +60,10 @@ public class GUI {
             drawNode(row, column, state, hasAgent, agentNumber);
         }
 
-        int startRow = 0;
-        int endRow = 0;
-        int startColumn = 0;
-        int endColumn = 0;
+        int startRow;
+        int endRow;
+        int startColumn;
+        int endColumn;
 
         for(int i = 0; i < sensors.size(); i++){
             for(int j = 0; j < sensors.get(i).getNeighbors().size(); j++){
@@ -64,13 +75,25 @@ public class GUI {
             }
         }
 
+
+        gc.setFill(Color.BLACK);
+        gc.setFont(new Font("Arial", 30));
+        gc.fillText("Waiting for initialization", 30, 4800);
     }
 
 
     public  void drawNode(int row, int column, char state, boolean hasAgent, int agentNumber) {
         if(state == 'b'){
-            gc.setFill(Color.LIGHTBLUE);
-            gc.fillOval(row, column, 30, 30);
+            int x = stationX * 100 + 200;
+            int y = (40 - stationY) * 100 + 200;
+            if(x == row && y == column){
+                gc.setFill(Color.GREEN);
+                gc.fillOval(row, column, 30, 30);
+            }
+            else{
+                gc.setFill(Color.LIGHTBLUE);
+                gc.fillOval(row, column, 30, 30);
+            }
         }
         else if(state == 'y'){
             gc.setFill(Color.YELLOW);
@@ -87,4 +110,6 @@ public class GUI {
         gc.setFill(Color.BLACK);
         gc.strokeLine(startRow, startColumn, endRow, endColumn);
     }
+
+
 }

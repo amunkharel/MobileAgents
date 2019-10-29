@@ -3,16 +3,10 @@ package mobileAgents;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -38,7 +32,7 @@ public class Main extends Application {
 
     private Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
-
+    private int stationX, stationY;
 
 
 
@@ -63,8 +57,13 @@ public class Main extends Application {
         //graph.initializeThreads();
 
         sensors = graph.getSensors();
+        stationX = graph.getStationX();
+        stationY = graph.getStationY();
+
 
         gui.setSensors(sensors);
+        gui.setStationX(stationX);
+        gui.setStationY(stationY);
 
 
         AnimationTimer animator = new AnimationTimer() {
