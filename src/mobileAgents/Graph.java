@@ -96,9 +96,6 @@ public class Graph {
                 stationX = evaluateNumber(n, line, line.length());
                 n = n + addingCounter + 1;
                 stationY = evaluateNumber(n, line, line.length());
-
-                //System.out.println("StationX: "+stationX);
-                //System.out.println("StationY: "+stationY);
             }
         }
     }
@@ -220,4 +217,5 @@ public class Graph {
     public ArrayList<Sensor> getSensors() {
         return sensors;
     }
+
 }

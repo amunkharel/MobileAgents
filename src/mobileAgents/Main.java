@@ -3,11 +3,16 @@ package mobileAgents;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -19,9 +24,9 @@ public class Main extends Application {
 
     private Text logInfo = new Text();
 
-    private BorderPane bp = new BorderPane();
+    private ScrollPane sp = new ScrollPane();
 
-    private Canvas canvas = new Canvas(1200, 1000);
+    private Canvas canvas = new Canvas(5000, 5000);
 
     private Graph graph;
 
@@ -29,7 +34,7 @@ public class Main extends Application {
 
     private GUI gui = new GUI(graph, canvas);
 
-    private Scene scene = new Scene(bp, 1200, 1000);
+    private Scene scene = new Scene(sp, 5000, 5000);
 
     private Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
@@ -71,11 +76,16 @@ public class Main extends Application {
 
         animator.start();
 
-        bp.setCenter(canvas);
 
-        bp.setTop(logInfo);
 
-        bp.setAlignment(logInfo, Pos.CENTER);
+
+
+        //sp.setFitToHeight(true);
+        //sp.setFitToWidth(true);
+        sp.setContent(canvas);
+        //bp.setTop(logInfo);
+
+        //bp.setAlignment(logInfo, Pos.CENTER);
 
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
