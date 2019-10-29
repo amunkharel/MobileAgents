@@ -167,13 +167,15 @@ public class Graph {
             t1.join();
 
         }
-        sensors.get(0).setIsInitialized(true);
+
         t1 = new Thread(startingAgent);
 
 
         t1.start();
 
         t1.join();
+
+        sensors.get(0).setIsInitialized(true);
 
         counter = 0;
 
@@ -185,9 +187,10 @@ public class Graph {
                 for (int i = 0; i < sensors.size(); i++) {
                     t1 = new Thread(sensors.get(i));
                     t1.start();
-                    t1.join();
+
                 }
 
+                t1.join();
 
                 counter++;
             }
