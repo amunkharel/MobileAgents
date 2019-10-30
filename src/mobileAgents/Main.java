@@ -3,6 +3,7 @@ package mobileAgents;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
@@ -62,6 +63,14 @@ public class Main extends Application {
         gui.setStationX(stationX);
         gui.setStationY(stationY);
 
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                graph.initializeThreads();
+                return null;
+            }
+        };
+
 
 
         AnimationTimer animator = new AnimationTimer() {
@@ -72,13 +81,14 @@ public class Main extends Application {
         };
 
         animator.start();
+        new Thread(task).start();
 
 
-        try {
+        /*try {
             graph.initializeThreads();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
 
