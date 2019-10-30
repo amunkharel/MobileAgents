@@ -101,25 +101,19 @@ public class Graph {
     public void accessStoredInfoFromFile(){
         for(int i = 0; i < nodes.size(); i++){
             int verX = nodes.get(i).x;
-            //System.out.print("VerX: "+verX);
             int verY = nodes.get(i).y;
-            //System.out.println(" VerY: "+verY);
             Sensor sensor = new Sensor(verX, verY, i);
             sensors.add(sensor);
             mappingCoorToInt.put(new Point(verX, verY), i);
         }
         for(int i = 0; i < startingEdge.size(); i++){
             int startX = startingEdge.get(i).x;
-            //System.out.print("StartX: "+startX);
             int startY = startingEdge.get(i).y;
-            //System.out.println(" StartY: "+startY);
             int x = getIDofPoint(new Point(startX, startY));
             Sensor sensorOne = sensors.get(x);
 
             int endX = endingEdge.get(i).x;
-            //System.out.print("EndX: "+endX);
             int endY = endingEdge.get(i).y;
-            //System.out.println(" EndY: "+endY);
             int y = getIDofPoint(new Point(endX, endY));
             Sensor sensorTwo = sensors.get(y);
 

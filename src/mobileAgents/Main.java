@@ -47,14 +47,11 @@ public class Main extends Application {
         logInfo.setText("Starting Program ...");
         logInfo.setFont(Font.font("Verdana", 20));
 
-
         graph = new Graph("sample.txt");
 
         graph.readFile();
 
         graph.accessStoredInfoFromFile();
-
-        //graph.initializeThreads();
 
         sensors = graph.getSensors();
         stationX = graph.getStationX();
@@ -64,6 +61,7 @@ public class Main extends Application {
         gui.setSensors(sensors);
         gui.setStationX(stationX);
         gui.setStationY(stationY);
+
 
 
         AnimationTimer animator = new AnimationTimer() {
@@ -76,6 +74,11 @@ public class Main extends Application {
         animator.start();
 
 
+        try {
+            graph.initializeThreads();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
 

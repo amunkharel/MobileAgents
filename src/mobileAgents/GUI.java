@@ -8,7 +8,7 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
-public class GUI {
+public class GUI implements Runnable{
 
     private Graph graph;
 
@@ -41,8 +41,6 @@ public class GUI {
 
 
     public void updateCanvas() {
-        System.out.println(stationX);
-        System.out.println(stationY);
         int row;
         int column;
         char state;
@@ -112,4 +110,8 @@ public class GUI {
     }
 
 
+    @Override
+    public void run() {
+        updateCanvas();
+    }
 }
