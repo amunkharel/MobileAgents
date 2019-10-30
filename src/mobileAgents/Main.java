@@ -35,16 +35,12 @@ public class Main extends Application {
 
     private int stationX, stationY;
 
-
-
     public static void main(String[] args) throws InterruptedException {
         launch(args);
-
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         logInfo.setText("Starting Program ...");
         logInfo.setFont(Font.font("Verdana", 20));
 
@@ -58,7 +54,6 @@ public class Main extends Application {
         stationX = graph.getStationX();
         stationY = graph.getStationY();
 
-
         gui.setSensors(sensors);
         gui.setStationX(stationX);
         gui.setStationY(stationY);
@@ -71,8 +66,6 @@ public class Main extends Application {
             }
         };
 
-
-
         AnimationTimer animator = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -82,23 +75,7 @@ public class Main extends Application {
 
         animator.start();
         new Thread(task).start();
-
-
-        /*try {
-            graph.initializeThreads();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-
-
-
-        //sp.setFitToHeight(true);
-        //sp.setFitToWidth(true);
         sp.setContent(canvas);
-        //bp.setTop(logInfo);
-
-        //bp.setAlignment(logInfo, Pos.CENTER);
-
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();

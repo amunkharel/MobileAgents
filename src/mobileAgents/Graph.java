@@ -15,6 +15,7 @@ public class Graph {
     private ArrayList<Point> startingEdge = new ArrayList<>();
     private ArrayList<Point> endingEdge = new ArrayList<>();
     private ArrayList<Point> fireNodes = new ArrayList<>();
+    private ArrayList<Point> baseStationNodes = new ArrayList<>();
     private int stationX, stationY;
 
     private Agent startingAgent = null;
@@ -94,6 +95,7 @@ public class Graph {
                 stationX = evaluateNumber(n, line, line.length());
                 n = n + addingCounter + 1;
                 stationY = evaluateNumber(n, line, line.length());
+                baseStationNodes.add(new Point(stationX, stationY));
             }
         }
     }
@@ -196,9 +198,6 @@ public class Graph {
 
 
         }
-
-
-
 
     }
 
