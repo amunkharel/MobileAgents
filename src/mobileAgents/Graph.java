@@ -17,6 +17,10 @@ public class Graph {
     private ArrayList<Point> fireNodes = new ArrayList<>();
     private ArrayList<Point> baseStationNodes = new ArrayList<>();
     private int stationX, stationY;
+    private int differenceX = 0;
+    private int differenceY = 0;
+    private int leastX = 10000;
+    private int leastY = 10000;
 
     private Agent startingAgent = null;
     private Sensor baseStation = null;
@@ -218,4 +222,60 @@ public class Graph {
         return stationY;
     }
 
+    public void determineScalibilityOfGraph() {
+        setDifferenceX();
+        setDifferenceY();
+    }
+
+    private void setDifferenceX() {
+        int difference = 0;
+        for(int i = 0; i < nodes.size(); i++){
+            for(int j = 0; j < nodes.size(); j++){
+                difference = Math.abs(nodes.get(j).x - nodes.get(i).x);
+                if(nodes.get(j).x < leastX){
+                    leastX = nodes.get(j).x;
+                }
+                if(nodes.get(i).x < leastX){
+                    leastX = nodes.get(i).x;
+                }
+                if(difference > differenceX){
+                    differenceX = difference;
+                }
+            }
+        }
+    }
+
+    public int getLeastX(){
+        return leastX;
+    }
+
+    public int getDifferenceX(){
+        return differenceX;
+    }
+
+    private void setDifferenceY() {
+        int difference = 0;
+        for(int i = 0; i < nodes.size(); i++){
+            for(int j = 0; j < nodes.size(); j++){
+                difference = Math.abs(nodes.get(j).y - nodes.get(i).y);
+                if(nodes.get(j).y < leastY){
+                    leastY = nodes.get(j).y;
+                }
+                if(nodes.get(i).y < leastY){
+                    leastY = nodes.get(i).y;
+                }
+                if(difference > differenceY){
+                    differenceY = difference;
+                }
+            }
+        }
+    }
+
+    public int getLeastY(){
+        return leastY;
+    }
+
+    public int getDifferenceY(){
+        return differenceY;
+    }
 }

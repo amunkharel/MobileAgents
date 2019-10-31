@@ -4,10 +4,12 @@ package mobileAgents;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.concurrent.Task;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -19,9 +21,11 @@ public class Main extends Application {
 
     private Text logInfo = new Text();
 
+    //private ScrollPane sp = new ScrollPane();
+
     private ScrollPane sp = new ScrollPane();
 
-    private Canvas canvas = new Canvas(5000, 5000);
+    private Canvas canvas = new Canvas(4250, 4250);
 
     private Graph graph;
 
@@ -29,11 +33,13 @@ public class Main extends Application {
 
     private GUI gui = new GUI(graph, canvas);
 
-    private Scene scene = new Scene(sp, 5000, 5000);
+    private Scene scene = new Scene(sp, 4250, 4250);
 
     private Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
     private int stationX, stationY;
+
+    private int differenceX, differenceY, leastX, leastY;
 
     public static void main(String[] args) throws InterruptedException {
         launch(args);
@@ -44,17 +50,25 @@ public class Main extends Application {
         logInfo.setText("Starting Program ...");
         logInfo.setFont(Font.font("Verdana", 20));
 
-        graph = new Graph("sample.txt");
-
+        graph = new Graph("lol.txt");
         graph.readFile();
-
         graph.accessStoredInfoFromFile();
+        graph.determineScalibilityOfGraph();
 
         sensors = graph.getSensors();
+
+        differenceX = graph.getDifferenceX();
+        differenceY = graph.getDifferenceY();
+        leastX = graph.getLeastX();
+        leastY = graph.getLeastY();
         stationX = graph.getStationX();
         stationY = graph.getStationY();
 
         gui.setSensors(sensors);
+        gui.setDifferenceX(differenceX);
+        gui.setDifferenceY(differenceY);
+        gui.setLeastX(leastX);
+        gui.setLeastY(leastY);
         gui.setStationX(stationX);
         gui.setStationY(stationY);
 
@@ -75,6 +89,7 @@ public class Main extends Application {
 
         animator.start();
         new Thread(task).start();
+
         sp.setContent(canvas);
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
