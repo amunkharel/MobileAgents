@@ -29,13 +29,17 @@ public class GUI implements Runnable{
     private int stationPixelX;
     private int stationPixelY;
 
+    private  Log log;
 
-    public GUI(Graph graph, Canvas canvas) {
+
+    public GUI(Graph graph, Canvas canvas, Log log) {
         this.graph = graph;
 
         this.canvas = canvas;
 
         this.gc = canvas.getGraphicsContext2D();
+
+        this.log = log;
     }
 
     public void setSensors(ArrayList<Sensor> sensors) {
@@ -48,6 +52,9 @@ public class GUI implements Runnable{
 
 
     public void updateCanvas() {
+
+
+
         gc.setFill(Color.KHAKI);
         gc.fillRect(0, 0, 4250, 4250);
 
@@ -86,9 +93,9 @@ public class GUI implements Runnable{
                 }
             }
 
-            /*gc.setFill(Color.BLACK);
+            gc.setFill(Color.BLACK);
             gc.setFont(new Font("Arial", 30));
-            gc.fillText(sensors.get(i).getText(), 50, 90);*/
+            gc.fillText(log.getLogMessage(), 50, 90);
         }
 
         for(int i = 0; i < sensors.size(); i++){

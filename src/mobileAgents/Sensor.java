@@ -20,17 +20,21 @@ public class Sensor implements  Runnable{
 
     private static boolean isInitialized;
 
+    private Log log;
+
     ArrayList<BlockingQueue<String>> queues = new ArrayList<>();
 
     private char state;
 
     private boolean sentMessageAfterBecomingRed;
 
-    public Sensor(int xcor, int ycor, int id) {
+    public Sensor(int xcor, int ycor, int id, Log log) {
         this.id = id;
         this.xCor = xcor;
         this.yCor = ycor;
         neighbors = new ArrayList<Sensor>();
+
+        this.log = log;
 
         state = 'b';
 
@@ -97,6 +101,7 @@ public class Sensor implements  Runnable{
                         }
                         if(counter == neighbors.get(i).getNeighbors().size()){
                             neighbors.get(i).setState('r');
+                            log.setLogMessage("Sensor " + neighbors.get(i).getId() + " is on fire");
                             System.out.println("Sensor " + neighbors.get(i).getId() + " is on fire");
                             try {
                                 Thread.sleep(1000);
@@ -113,6 +118,8 @@ public class Sensor implements  Runnable{
     public void redNeighborsSentsMessageToNeighbors() {
         if(state == 'r' && sentMessageAfterBecomingRed == false) {
             System.out.println("Sensor " + this.id + " is on fire and " +
+                    "sending messages to its neighbors");
+            log.setLogMessage("Sensor " + this.id + " is on fire and " +
                     "sending messages to its neighbors");
             for(int i = 0; i < neighbors.size(); i++) {
                 try {
@@ -143,6 +150,8 @@ public class Sensor implements  Runnable{
                                 this.state = 'y';
                                 System.out.println("Sensor " + this.id + "" +
                                         "knows it's neighbor is on fire");
+                                log.setLogMessage("Sensor " + this.id + "" +
+                                        "knows it's neighbor is on fire");
                                 queues.get(i).remove("Turn Yellow");
                             }
                         }
@@ -171,6 +180,7 @@ public class Sensor implements  Runnable{
         hasAgent = true;
         this.agentNumber = agentNumber;
         System.out.println("Agent " + agentNumber + " is at sensor " + this.id);
+        log.setLogMessage("Agent " + agentNumber + " is at sensor " + this.id);
     }
 
     public void removeAgent() {

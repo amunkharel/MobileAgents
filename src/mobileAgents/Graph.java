@@ -22,26 +22,33 @@ public class Graph {
     private int leastX = 10000;
     private int leastY = 10000;
 
+    private  Log log;
+
+    private boolean gameOver = false;
+
     private Agent startingAgent = null;
     private Sensor baseStation = null;
 
-    public Graph(String file){
+    public Graph(String file, Log log){
         this.file = file;
+        this.log = log;
     }
 
     public void readFile(){
-        InputStream path = this.getClass().getResourceAsStream(this.file);
-        BufferedReader reader;
+        String pathname = "resources/" + file;
+
         try {
-            reader = new BufferedReader(new InputStreamReader(path));
-            String line = reader.readLine();
-            while(line != null) {
-                lineEvaluation(line);
-                line = reader.readLine();
+            Scanner sc = new Scanner(new File(pathname));
+            while(sc.hasNext()) {
+                String str = sc.nextLine();
+                if(!str.isEmpty()) {
+                    lineEvaluation(str);
+                }
             }
-            reader.close();
+
+            sc.close();
         }
-        catch (IOException e) {
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -108,7 +115,7 @@ public class Graph {
         for(int i = 0; i < nodes.size(); i++){
             int verX = nodes.get(i).x;
             int verY = nodes.get(i).y;
-            Sensor sensor = new Sensor(verX, verY, i);
+            Sensor sensor = new Sensor(verX, verY, i, log);
             sensors.add(sensor);
             mappingCoorToInt.put(new Point(verX, verY), i);
         }
@@ -141,7 +148,7 @@ public class Graph {
 
         int x = getIDofPoint(new Point(stationX, stationY));
         baseStation = sensors.get(x);
-        startingAgent = new Agent(baseStation, sensors.size());
+        startingAgent = new Agent(baseStation, sensors.size(), log);
         startingAgent.setFoundYellow(false);
 
     }
@@ -195,13 +202,15 @@ public class Graph {
 
 
 
-            Agent agent = new Agent(agents.get(0), sensors.size());
+            Agent agent = new Agent(agents.get(0), sensors.size(), log);
             t1 = new Thread(agent);
             t1.start();
             t1.join();
 
 
         }
+
+        gameOver = true;
 
     }
 
@@ -277,5 +286,9 @@ public class Graph {
 
     public int getDifferenceY(){
         return differenceY;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 }

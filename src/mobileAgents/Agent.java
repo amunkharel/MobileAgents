@@ -17,6 +17,8 @@ public class Agent implements Runnable {
 
     private static  int agentNumber = 0;
 
+    private  Log log;
+
     private static Lock lock;
 
     private ArrayList<Sensor> sensors = new ArrayList<>();
@@ -24,11 +26,12 @@ public class Agent implements Runnable {
     private static ArrayList<Sensor> agents = new ArrayList<>();
 
 
-    public Agent (Sensor sensor, int numberOfNodes) {
+    public Agent (Sensor sensor, int numberOfNodes, Log log) {
         this.sensor = sensor;
         this.foundYellow = true;
         this.numberOfNodes = numberOfNodes;
         lock = new ReentrantLock();
+        this.log = log;
     }
 
     public void setFoundYellow(boolean foundYellow) {
@@ -75,7 +78,7 @@ public class Agent implements Runnable {
                 for(int i = 0; i < sensor.getNeighbors().size(); i++) {
                     if(sensor.getNeighbors().get(i).getState() == 'b' &&
                             !sensor.getNeighbors().get(i).hasAgent()) {
-                        Agent agent1 = new Agent(sensor.getNeighbors().get(i), numberOfNodes);
+                        Agent agent1 = new Agent(sensor.getNeighbors().get(i), numberOfNodes, log);
                         agentNumber++;
                         sensor.getNeighbors().get(i).addAgent(agentNumber);
                         agents.add(sensor.getNeighbors().get(i));
@@ -107,7 +110,7 @@ public class Agent implements Runnable {
         }
         if(sensor.getState() != 'y'){
             if(sensor.getState() == 'b') {
-                Agent agent = new Agent(sensor, numberOfNodes);
+                Agent agent = new Agent(sensor, numberOfNodes, log);
                 agentNumber++;
                 sensor.addAgent(agentNumber);
                 agents.add(sensor);
@@ -124,7 +127,7 @@ public class Agent implements Runnable {
             }
         }
         else{
-            Agent agent = new Agent(sensor, numberOfNodes);
+            Agent agent = new Agent(sensor, numberOfNodes, log);
             agentNumber++;
             sensor.addAgent(agentNumber);
             agents.add(sensor);

@@ -15,13 +15,15 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main extends Application {
 
-    private Text logInfo = new Text();
 
     //private ScrollPane sp = new ScrollPane();
+
+    private String filename = "";
 
     private ScrollPane sp = new ScrollPane();
 
@@ -30,8 +32,9 @@ public class Main extends Application {
     private Graph graph;
 
     private ArrayList<Sensor> sensors = new ArrayList<>();
+    private Log log = new Log();
 
-    private GUI gui = new GUI(graph, canvas);
+    private GUI gui = new GUI(graph, canvas, log);
 
     private Scene scene = new Scene(sp, 4250, 4250);
 
@@ -41,16 +44,24 @@ public class Main extends Application {
 
     private int differenceX, differenceY, leastX, leastY;
 
+
+
     public static void main(String[] args) throws InterruptedException {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        logInfo.setText("Starting Program ...");
-        logInfo.setFont(Font.font("Verdana", 20));
 
-        graph = new Graph("lol.txt");
+        Parameters params = getParameters();
+        List<String> parameters = params.getRaw();
+
+        if(parameters.size() > 1) {
+            System.out.println("The program expects only one parameter");
+            System.exit(0);
+        }
+
+        graph = new Graph(parameters.get(0), log);
         graph.readFile();
         graph.accessStoredInfoFromFile();
         graph.determineScalibilityOfGraph();
@@ -84,12 +95,15 @@ public class Main extends Application {
             @Override
             public void handle(long now) {
                 gui.updateCanvas();
+
+                if(graph.isGameOver()) {
+                    primaryStage.close();
+                }
             }
         };
 
         animator.start();
         new Thread(task).start();
-
         sp.setContent(canvas);
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
