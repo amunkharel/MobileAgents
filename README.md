@@ -1,6 +1,6 @@
 MOBILE AGENTS
 
-NOTE: Documentation might take up till Friday, November 8. Coding finished already and you can see that from our commit
+NOTE: Documentation might take up till Wednesday, November 6. Coding finished already and you can see that from our commit
 history.
 
 1. HOW TO INITIATE PROGRAM
