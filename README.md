@@ -37,7 +37,7 @@ history.
     graph makes smaller sized nodes and edges in the GUI. If the graph is small, like "sample.txt", the graph makes
     bigger sized nodes and edges in the GUI. In short, the GUI scales accordingly to the size of the graph. Also,
     ScrollPane is used in the GUI this time. I tried to use borderPane and make "lol.txt" nice but "lol.txt" looked
-    very bad when using BorderPane. To counter that, I used ScrollPane which allows for 3000*3000 display because of the
+    very bad when using BorderPane. To counter that, I used ScrollPane which allows for 4250*4250 display because of the
     scrolling feature. "lol.txt" looks half decent when using ScrollPane. On to the GUI, the base station is recorded
     while reading the file and it's node is given the color green. The nodes on fire are given color red. Everything
     else if given the color blue at the start. Once the threads start to run, the color of the bases change accordingly.

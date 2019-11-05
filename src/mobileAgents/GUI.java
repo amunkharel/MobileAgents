@@ -10,28 +10,59 @@ import java.util.ArrayList;
 
 public class GUI implements Runnable{
 
+    /**
+     * instance of class graph
+     */
     private Graph graph;
 
+    /**
+     * make GUI here
+     */
     private Canvas canvas;
 
+    /**
+     * use this to draw images
+     */
     private GraphicsContext gc;
 
+    /**
+     * list of the sensors created
+     */
     private ArrayList<Sensor> sensors = new ArrayList<>();
 
+    /**
+     * coordinates of base station
+     */
     private int stationX;
-
     private int stationY;
 
+    /**
+     * used for scalability
+     */
     private int differenceX;
     private int differenceY;
     private int leastX;
     private int leastY;
+
+    /**
+     * used to determine the pixel
+     * location of base station
+     */
     private int stationPixelX;
     private int stationPixelY;
 
+    /**
+     * instance of class Log
+     */
     private  Log log;
 
 
+    /**
+     * initialize the parameters
+     * @param graph
+     * @param canvas
+     * @param log
+     */
     public GUI(Graph graph, Canvas canvas, Log log) {
         this.graph = graph;
 
@@ -42,15 +73,30 @@ public class GUI implements Runnable{
         this.log = log;
     }
 
+    /**
+     * set the sensors to be used
+     * @param sensors
+     */
     public void setSensors(ArrayList<Sensor> sensors) {
         this.sensors = sensors;
     }
 
+    /**
+     * initialize stationX
+     * @param stationX
+     */
     public void setStationX(int stationX){this.stationX = stationX;}
 
+    /**
+     * initialize stationY
+     * @param stationY
+     */
     public void setStationY(int stationY){this.stationY = stationY;}
 
 
+    /**
+     * update canvas with back end data
+     */
     public void updateCanvas() {
 
 
@@ -137,6 +183,10 @@ public class GUI implements Runnable{
         }
     }
 
+    /**
+     * bigger sized nodes for small graphs
+     * @param i
+     */
     public void forOneDigitNode(int i){
         if (stationX == sensors.get(i).getXCor() && stationY == sensors.get(i).getYCor()){
             stationPixelX = ((sensors.get(i).getXCor() - leastX) * 100) + 200;
@@ -150,6 +200,10 @@ public class GUI implements Runnable{
         drawNode(row, column, state, hasAgent, agentNumber);
     }
 
+    /**
+     * medium sized nodes for medium graphs
+     * @param i
+     */
     public void forTwoDigitSNode(int i){
         if (stationX == sensors.get(i).getXCor() && stationY == sensors.get(i).getYCor()){
             stationPixelX = ((sensors.get(i).getXCor() - leastX) * 45) + 200;
@@ -163,6 +217,10 @@ public class GUI implements Runnable{
         drawNode(row, column, state, hasAgent, agentNumber);
     }
 
+    /**
+     * small sized nodes for big graphs
+     * @param i
+     */
     public void forThreeDigitsNode(int i){
         if (stationX == sensors.get(i).getXCor() && stationY == sensors.get(i).getYCor()){
             stationPixelX = ((sensors.get(i).getXCor() - leastX) * 4) + 200;
@@ -177,7 +235,11 @@ public class GUI implements Runnable{
     }
 
 
-
+    /**
+     * bigger sized edges for small graphs
+     * @param i
+     * @param j
+     */
     public void forOneDigitEdge(int i, int j){
         int startRow = (sensors.get(i).getXCor() - leastX) * 100 + 215;
         int endRow = (sensors.get(i).getNeighbors().get(j).getXCor() - leastX) * 100 + 215;
@@ -186,6 +248,11 @@ public class GUI implements Runnable{
         drawEdges(startRow, startColumn, endRow, endColumn);
     }
 
+    /**
+     * medium sized edges for medium graphs
+     * @param i
+     * @param j
+     */
     public void forTwoDigitsEdge(int i, int j){
         int startRow = (sensors.get(i).getXCor() - leastX) * 45 + 207;
         int endRow = (sensors.get(i).getNeighbors().get(j).getXCor() - leastX) * 45 + 207;
@@ -194,6 +261,11 @@ public class GUI implements Runnable{
         drawEdges(startRow, startColumn, endRow, endColumn);
     }
 
+    /**
+     * smaller sized edges for large graphs
+     * @param i
+     * @param j
+     */
     public void forThreeDigitsEdge(int i, int j){
         int startRow = ((sensors.get(i).getXCor() - leastX) * 4) + 204;
         int endRow = ((sensors.get(i).getNeighbors().get(j).getXCor() - leastX) * 4) + 204;
@@ -203,6 +275,14 @@ public class GUI implements Runnable{
     }
 
 
+    /**
+     * give color according to state of node
+     * @param row
+     * @param column
+     * @param state
+     * @param hasAgent
+     * @param agentNumber
+     */
     public  void drawNode(int row, int column, char state, boolean hasAgent, int agentNumber) {
         if(state == 'b'){
             if(stationPixelX == row && stationPixelY == column){
@@ -228,6 +308,12 @@ public class GUI implements Runnable{
         }
     }
 
+    /**
+     * if agent present, indicate node with a black outer circle
+     * @param row
+     * @param column
+     * @param agentNumber
+     */
     public void drawOuterCircle(int row, int column, int agentNumber){
         gc.setStroke(Color.BLACK);
         if (differenceX >= 0 && differenceX <= 9) {
@@ -284,6 +370,11 @@ public class GUI implements Runnable{
         gc.fillText("Agent " + agentNumber, row, column);
     }
 
+    /**
+     * draw nodes according to graph size
+     * @param row
+     * @param column
+     */
     public void drawCircle(int row, int column) {
         if (differenceX >= 0 && differenceX <= 9) {
             if(differenceY >= 0 && differenceY <= 9) {
@@ -320,6 +411,13 @@ public class GUI implements Runnable{
         }
     }
 
+    /**
+     * draw edges according to graph size
+     * @param startRow
+     * @param startColumn
+     * @param endRow
+     * @param endColumn
+     */
     public void drawEdges(int startRow, int startColumn, int endRow, int endColumn) {
         gc.setFill(Color.BLACK);
         gc.strokeLine(startRow, startColumn, endRow, endColumn);
@@ -327,22 +425,41 @@ public class GUI implements Runnable{
 
 
     @Override
+    /**
+     * thread for GUI
+     */
     public void run() {
         updateCanvas();
     }
 
+    /**
+     * initialize this class's differenceY
+     * @param differenceY
+     */
     public void setDifferenceY(int differenceY) {
         this.differenceY = differenceY;
     }
 
+    /**
+     * initialize this class's differenceX
+     * @param differenceX
+     */
     public void setDifferenceX(int differenceX) {
         this.differenceX = differenceX;
     }
 
+    /**
+     * initialize this class's leastY
+     * @param leastY
+     */
     public void setLeastY(int leastY) {
         this.leastY = leastY;
     }
 
+    /**
+     * initialize this class's leastX
+     * @param leastX
+     */
     public void setLeastX(int leastX) {
         this.leastX = leastX;
     }

@@ -20,37 +20,64 @@ import java.util.List;
 
 public class Main extends Application {
 
-
-    //private ScrollPane sp = new ScrollPane();
-
-    private String filename = "";
-
+    /**
+     * Useful for scrolling since the display is big.
+     * Helps accommodate big graphs like "lol.txt"
+     */
     private ScrollPane sp = new ScrollPane();
 
+    /**
+     * GUI is made here
+     */
     private Canvas canvas = new Canvas(4250, 4250);
 
+    /**
+     * used to start methods in class Graph
+     */
     private Graph graph;
 
+    /**
+     * Array list that contains all the sensors/nodes given
+     */
     private ArrayList<Sensor> sensors = new ArrayList<>();
+
+    /**
+     * Used to display messages in the GUI
+     */
     private Log log = new Log();
 
     private GUI gui = new GUI(graph, canvas, log);
 
+    /**
+     * sets scroll pane in a scene
+     */
     private Scene scene = new Scene(sp, 4250, 4250);
 
-    private Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
+    /**
+     * stores the co-ordinates of 1 station given in the graph
+     */
     private int stationX, stationY;
 
+    /**
+     * used for scaling the graph
+     */
     private int differenceX, differenceY, leastX, leastY;
 
 
-
+    /**
+     * start program
+     * @param args
+     * @throws InterruptedException
+     */
     public static void main(String[] args) throws InterruptedException {
         launch(args);
     }
 
     @Override
+    /**
+     * initializes the GUI thread, graph reading,
+     * processing and changing is called from here
+     */
     public void start(Stage primaryStage) throws Exception {
 
         Parameters params = getParameters();

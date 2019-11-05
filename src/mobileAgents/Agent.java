@@ -9,23 +9,47 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Agent implements Runnable {
 
+    /**
+     * instance of class Sensor
+     */
     private Sensor sensor;
 
+    /**
+     * boolean which indicates
+     * state of node, if yellow, return true
+     * if not, return false
+     */
     private boolean foundYellow;
 
+    /**
+     * number of nodes in the graph
+     */
     private int numberOfNodes;
 
+    /**
+     * agent ID
+     */
     private static  int agentNumber = 0;
 
+    /**
+     * instance of class Log
+     */
     private  Log log;
 
     private static Lock lock;
 
-    private ArrayList<Sensor> sensors = new ArrayList<>();
-
+    /**
+     * agents made in the threads
+     */
     private static ArrayList<Sensor> agents = new ArrayList<>();
 
 
+    /**
+     * give identity to an agent
+     * @param sensor
+     * @param numberOfNodes
+     * @param log
+     */
     public Agent (Sensor sensor, int numberOfNodes, Log log) {
         this.sensor = sensor;
         this.foundYellow = true;
@@ -34,11 +58,18 @@ public class Agent implements Runnable {
         this.log = log;
     }
 
+    /**
+     * at the start, this.foundYellow is true
+     * @param foundYellow
+     */
     public void setFoundYellow(boolean foundYellow) {
         this.foundYellow = foundYellow;
     }
 
     @Override
+    /**
+     * thread for each sensor
+     */
     public void run() {
         try {
             randomWalk();
@@ -48,13 +79,12 @@ public class Agent implements Runnable {
             e.printStackTrace();
         }
 
-
-
-
-
-
     }
 
+    /**
+     * kill agent on a node on fire
+     * @throws InterruptedException
+     */
     public void setAgentOnFire() throws InterruptedException{
             Sensor sensor = this.sensor;
             sensor.removeAgent();
@@ -65,12 +95,11 @@ public class Agent implements Runnable {
                     agents.remove(i);
                 }
             }
-
-
-
-
     }
 
+    /**
+     * agent clones itself recursively
+     */
     public void checkNeighborAndCloneAgent()  {
             if(foundYellow) {
                 System.out.println("Sensor " + sensor.getId() + " Agent A" + sensor.getAgentNumber() );
@@ -96,14 +125,14 @@ public class Agent implements Runnable {
                 }
             }
 
-
-
-
-
     }
 
 
-
+    /**
+     * called by above function. helper method where most of the recursion
+     * is done.
+     * @param sensor
+     */
     public void recurseYellowNeighbor(Sensor sensor) {
         if(sensor.hasAgent() == true){
             return;
@@ -145,7 +174,10 @@ public class Agent implements Runnable {
     }
 
 
-
+    /**
+     * initial method employed by the agent to find a yellow node. BFS used
+     * @throws InterruptedException
+     */
     public void randomWalk() throws InterruptedException {
         if(!foundYellow) {
 
@@ -195,6 +227,10 @@ public class Agent implements Runnable {
         }
     }
 
+    /**
+     * return agents formed
+     * @return
+     */
     public ArrayList<Sensor> getAgents() {
         return agents;
     }

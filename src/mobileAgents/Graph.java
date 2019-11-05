@@ -7,33 +7,89 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 
 public class Graph {
+    /**
+     * name of file
+     */
     private String file;
+
+    /**
+     * Array list that contains all the sensors/nodes given
+     */
     private ArrayList<Sensor> sensors = new ArrayList<>();
+
+    /**
+     * useful for storing id of a node, the first node read in
+     * the file has id 0, the last node read has id n - 1
+     */
     private Map<Point, Integer> mappingCoorToInt = new HashMap<>();
+    /**
+     * used when reading lines
+     */
     private int addingCounter;
+    /**
+     * Array list that stores the nodes given in config file
+     */
     private ArrayList<Point> nodes = new ArrayList<>();
+    /**
+     * Array list that stores the first coordinate given
+     * in the sentence that starts with "edge"
+     */
     private ArrayList<Point> startingEdge = new ArrayList<>();
+    /**
+     * Array list that stores the second coordinate given
+     * in the sentence that starts with "edge"
+     */
     private ArrayList<Point> endingEdge = new ArrayList<>();
+    /**
+     * Array list that stores the fire nodes given in
+     * config file
+     */
     private ArrayList<Point> fireNodes = new ArrayList<>();
     private ArrayList<Point> baseStationNodes = new ArrayList<>();
+    /**
+     * coordinates of base station
+     */
     private int stationX, stationY;
+
+    /**
+     * variables used for scaling
+     */
     private int differenceX = 0;
     private int differenceY = 0;
     private int leastX = 10000;
     private int leastY = 10000;
 
+    /**
+     * instance of class Log
+     */
     private  Log log;
 
+    /**
+     * determines if game is over or not
+     */
     private boolean gameOver = false;
 
+    /**
+     * agent that gets sent to the fire at the start
+     */
     private Agent startingAgent = null;
+    /**
+     * baseStation sensor
+     */
     private Sensor baseStation = null;
 
+    /**
+     * @param file read config file
+     * @param log
+     */
     public Graph(String file, Log log){
         this.file = file;
         this.log = log;
     }
 
+    /**
+     * read the config file.
+     */
     public void readFile(){
         String pathname = "resources/" + file;
 
@@ -53,6 +109,14 @@ public class Graph {
         }
     }
 
+    /**
+     * parsing coordinates given in file from
+     * string to integer
+     * @param n
+     * @param line
+     * @param lineLength
+     * @return
+     */
     public int evaluateNumber(int n, String line, int lineLength){
         int digit = 0;
         int classNum = n;
@@ -75,7 +139,12 @@ public class Graph {
         return number;
     }
 
-
+    /**
+     * Evaluate each line of a file by how it starts
+     * add coordinates to the appropriate array list
+     * defined in this class.
+     * @param line
+     */
     public void lineEvaluation(String line) {
         if(line.length() >= 8) {
             if (line.substring(0, 4).equals("node")) {
@@ -111,6 +180,11 @@ public class Graph {
         }
     }
 
+    /**
+     * initialize sensors, form neighbors, blocking queues
+     * for each sensor, initialize fire nodes, store
+     * coordinates of base station
+     */
     public void accessStoredInfoFromFile(){
         for(int i = 0; i < nodes.size(); i++){
             int verX = nodes.get(i).x;
@@ -153,6 +227,11 @@ public class Graph {
 
     }
 
+    /**
+     * Initialize the threads of all sensors and agents
+     * created in the program.
+     * @throws InterruptedException
+     */
     public void initializeThreads() throws  InterruptedException{
         ArrayList<Sensor> agents = new ArrayList<>();
         Thread t1 = null;
@@ -214,28 +293,51 @@ public class Graph {
 
     }
 
+    /**
+     * @param p
+     * @return ID of coordinate
+     */
     public int getIDofPoint(Point p){
         return mappingCoorToInt.get(p);
     }
 
 
+    /**
+     * @return the sensors created
+     */
     public ArrayList<Sensor> getSensors() {
         return sensors;
     }
 
+    /**
+     * @return X coordinate of base station
+     */
     public int getStationX(){
         return stationX;
     }
 
+    /**
+     *
+     * @return Y coordinate of base station
+     */
     public int getStationY(){
         return stationY;
     }
 
+    /**
+     * determine the size of the graph in terms of the
+     * difference between the smallest and the biggest node,
+     * both vertically and horizontally
+     */
     public void determineScalibilityOfGraph() {
         setDifferenceX();
         setDifferenceY();
     }
 
+    /**
+     * determine the size of the graph horizontally
+     * and the coordinate of the lowest node
+     */
     private void setDifferenceX() {
         int difference = 0;
         for(int i = 0; i < nodes.size(); i++){
@@ -254,14 +356,26 @@ public class Graph {
         }
     }
 
+    /**
+     *
+     * @return least X coordinate
+     */
     public int getLeastX(){
         return leastX;
     }
 
+    /**
+     *
+     * @return horizontal size difference
+     */
     public int getDifferenceX(){
         return differenceX;
     }
 
+    /**
+     * determine the size of the graph vertically
+     * and the coordinate of the lowest node
+     */
     private void setDifferenceY() {
         int difference = 0;
         for(int i = 0; i < nodes.size(); i++){
@@ -280,14 +394,25 @@ public class Graph {
         }
     }
 
+    /**
+     * @return least Y coordinate
+     */
     public int getLeastY(){
         return leastY;
     }
 
+
+    /**
+     *
+     * @return vertical size difference
+     */
     public int getDifferenceY(){
         return differenceY;
     }
 
+    /**
+     * @return state of game
+     */
     public boolean isGameOver() {
         return gameOver;
     }
